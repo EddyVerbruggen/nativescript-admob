@@ -1,0 +1,35 @@
+<Page xmlns="http://www.nativescript.org/tns.xsd" loaded="pageLoaded">
+  <TabView>
+    <TabView.items>
+      <TabViewItem title="About">
+        <TabViewItem.view>
+          <ScrollView>
+            <StackLayout cssClass="tab-content">
+              <Image margin="10" src="~/res/telerik-logo.png" />
+              <Label text="AdMob plugin demo" cssClass="title"/>
+              <Label text="Make some money with your app!" textWrap="true"/>
+            </StackLayout>
+          </ScrollView>
+        </TabViewItem.view>
+      </TabViewItem>
+      <TabViewItem title="Demo">
+        <TabViewItem.view>
+          <GridLayout columns="*, *" rows="auto, auto, auto, auto" horizontalAlignment="center" cssClass="tab-content">
+
+            <Button row="0" col="0" text="smart banner" tap="{{ doCreateSmartBanner }}" />
+            <Button row="0" col="1"  text="regular banner" tap="{{ doCreateRegularBanner }}"/>
+
+            <Button row="1" col="0" text="skyscraper" tap="{{ doCreateSkyscraperBanner }}" />
+            <Button row="1" col="1"  text="large banner" tap="{{ doCreateLargeBanner }}"/>
+
+            <Button row="2" col="0" text="leaderboard" tap="{{ doCreateLeaderboardBanner }}" />
+            <Button row="2" col="1"  text="rectangle" tap="{{ doCreateRectangularBanner }}"/>
+
+            <Button row="3" colSpan="2" text="hide banner" tap="{{ doHideBanner }}"/>
+
+          </GridLayout>
+        </TabViewItem.view>
+      </TabViewItem>
+    </TabView.items>
+  </TabView>
+</Page>
