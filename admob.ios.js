@@ -32,8 +32,8 @@ admob.createBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (admob.adView != null) {
-        reject("Please hide an already showing banner first.");
-        return;
+        admob.adView.removeFromSuperview();
+        admob.adView = null;
       }
 
       admob.defaults.view = UIApplication.sharedApplication().keyWindow.rootViewController.view;
@@ -42,8 +42,9 @@ admob.createBanner = function (arg) {
       var bannerType = admob._getBannerType(settings.size);
       var adViewSize = CGSizeFromGADAdSize(bannerType);
 
+      var originX = (view.frame.size.width - adViewSize.width) / 2;
       var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adViewSize.height - settings.margins.bottom : 0.0);
-      var origin = CGPointMake(0.0, originY);
+      var origin = CGPointMake(originX, originY);
       admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
       admob.adView.adUnitID = settings.iosBannerId;
@@ -52,8 +53,8 @@ admob.createBanner = function (arg) {
 
       if (settings.testing) {
         var testDevices = [kGADSimulatorID];
-        if (settings.testDeviceIds) {
-          testDevices = testDevices.concat(settings.testDeviceIds);
+        if (settings.iosTestDeviceIds) {
+          testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }
         adRequest.testDevices = testDevices;
       }
@@ -63,7 +64,7 @@ admob.createBanner = function (arg) {
 
       admob.adView.loadRequest(adRequest);
 
-      // TODO consider listening to delegate features like 'ad loaded', but not for the 1.0 version. See https://developers.google.com/admob/ios/banner
+      // TODO consider listening to delegate features like 'ad loaded', but not for v1. See https://developers.google.com/admob/ios/banner
       //adView.delegate = self;
 
       view.addSubview(admob.adView);
