@@ -1,129 +1,129 @@
-//var utils = require("utils/utils");
+var utils = require("utils/utils");
 var application = require("application");
-//var frame = require("ui/frame");
+var frame = require("ui/frame");
 var admob = require("./admob-common");
-//var context = application.android.context;
+
+admob._getBannerType = function(size) {
+  if (size == admob.AD_SIZE.BANNER) {
+    return com.google.android.gms.ads.AdSize.BANNER;
+  } else if (size == admob.AD_SIZE.LARGE_BANNER) {
+    return com.google.android.gms.ads.AdSize.LARGE_BANNER;
+  } else if (size == admob.AD_SIZE.MEDIUM_RECTANGLE) {
+    return com.google.android.gms.ads.AdSize.MEDIUM_RECTANGLE;
+  } else if (size == admob.AD_SIZE.FULL_BANNER) {
+    return com.google.android.gms.ads.AdSize.FULL_BANNER;
+  } else if (size == admob.AD_SIZE.FLUID) {
+    return com.google.android.gms.ads.AdSize.FLUID;
+  } else if (size == admob.AD_SIZE.LEADERBOARD) {
+    // doesn't seem to work on Android - using large instead
+    //return com.google.android.gms.ads.AdSize.LEADERBOARD;
+    return com.google.android.gms.ads.AdSize.LARGE_BANNER;
+  } else if (size == admob.AD_SIZE.SKYSCRAPER) {
+    return com.google.android.gms.ads.AdSize.WIDE_SKYSCRAPER;
+  } else if (size == admob.AD_SIZE.SMART_BANNER) {
+    return com.google.android.gms.ads.AdSize.SMART_BANNER;
+  } else {
+    return null;
+  }
+};
+
+admob._md5 = function(input) {
+  try {
+    var digest = java.security.MessageDigest.getInstance("MD5");
+    var bytes = [];
+    for (var j = 0; j < input.length; ++j) {
+      bytes.push(input.charCodeAt(j));
+    }
+
+    var s = new java.lang.String(input);
+    digest.update(s.getBytes());
+    var messageDigest = digest.digest();
+    var hexString = "";
+    for (var i = 0; i < messageDigest.length; i++) {
+      var h = java.lang.Integer.toHexString(0xFF & messageDigest[i]);
+      while (h.length < 2)
+        h = "0" + h;
+        hexString += h;
+    }
+    return hexString;
+
+  } catch (noSuchAlgorithmException) {
+    console.log("error generating md5: " + noSuchAlgorithmException);
+    return null;
+  }
+};
 
 admob._buildAdRequest = function (settings) {
   var builder = new com.google.android.gms.ads.AdRequest.Builder();
   if (settings.testing) {
+    builder.addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
     // This will request test ads on the emulator and device by passing this hashed device ID.
     var activity = application.android.foregroundActivity;
     var ANDROID_ID = android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-    var deviceId = md5(ANDROID_ID).toUpperCase();
-    builder = builder.addTestDevice(deviceId).addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
+    var deviceId = admob._md5(ANDROID_ID);
+    if (deviceId != null) {
+      deviceId = deviceId.toUpperCase();
+      console.log("Treating this deviceId as testdevice: " + deviceId);
+      builder.addTestDevice(deviceId);
+    }
   }
   var bundle = new android.os.Bundle();
-  bundle.putInt("cordova", 1); //TODO
-  // TODO
-  /*
-   if (adExtras != null) {
-   Iterator<String> it = adExtras.keys();
-   while (it.hasNext()) {
-   String key = it.next();
-   try {
-   bundle.putString(key, adExtras.get(key).toString());
-   } catch (JSONException exception) {
-   Log.w(LOGTAG, String.format("Caught JSON Exception: %s", exception.getMessage()));
-   }
-   }
-   }
-   */
+  bundle.putInt("nativescript", 1);
   var adextras = new com.google.android.gms.ads.mediation.admob.AdMobExtras(bundle);
-  builder = builder.addNetworkExtras(adextras);
-  var request = request_builder.build();
-  return request;
+  //builder = builder.addNetworkExtras(adextras);
+  return builder.build();
 };
 
 admob.createBanner = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var settings = admob.merge(arg, admob.defaults);
-
-      var activity = application.android.foregroundActivity;
-      if (admob.adView == null) {
-        admob.adView = new com.google.android.gms.ads.AdView(activity);
-        //admob.adView.setAdUnitId("ca-app-pub-6869992474017983/9375997553"); // TODO
-        admob.adView.setAdSize(com.google.android.gms.ads.AdSize.SMART_BANNER); // settings.size); // TODO get from settings
-        //admob.adView.setAdListener(new com.google.android.gms.ads.BannerListener()); // TODO see https://github.com/floatinghotpot/cordova-plugin-admob/blob/master/src/android/AdMob.java#L494
+      // always close a previous opened banner
+      if (admob.adView != null) {
+        var parent = admob.adView.getParent();
+        if (parent != null) {
+          parent.removeView(admob.adView);
+        }
       }
-      admob.adView.loadAd(admob._buildAdRequest(settings));
-      //if (autoShowBanner) { // TODO
-      //  executeShowAd(true, null);
-      //}
+      var settings = admob.merge(arg, admob.defaults);
+      var activity = application.android.foregroundActivity;
+      admob.adView = new com.google.android.gms.ads.AdView(activity);
+      admob.adView.setAdUnitId(settings.androidBannerId);
+      var bannerType = admob._getBannerType(settings.size);
+      admob.adView.setAdSize(bannerType);
+      // TODO consider implementing events, after v1
+      //admob.adView.setAdListener(new com.google.android.gms.ads.BannerListener());
 
-      var adViewLayout = new android.widget.FrameLayout(activity);
-      adViewLayout.addView(admob.adView);
-      var topMostFrame = frame.topmost();
-      topMostFrame.currentPage.android.getParent().addView(adViewLayout);
+      var ad = admob._buildAdRequest(settings);
+      admob.adView.loadAd(ad);
 
-      //admob.adView.setVisibility(android.view.View.VISIBLE);
+      var topMostFrame = frame.topmost(),
+          density = utils.layout.getDisplayDensity(),
+          top = settings.margins.top * density,
+          bottom = settings.margins.bottom * density;
 
+      var relativeLayoutParams = new android.widget.RelativeLayout.LayoutParams(
+          android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
+          android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-      /*
-       mapView = new com.mapbox.mapboxsdk.views.MapView(context, settings.accessToken);
-       mapView.onResume();
-       mapView.onCreate(null);
-       mapView.setStyleUrl("asset://styles/" + mapbox.getStyle(settings.style) + "-v8.json");
+      if (bottom > -1) {
+        relativeLayoutParams.bottomMargin = bottom;
+        relativeLayoutParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
+      } else {
+        if (top > -1) {
+          relativeLayoutParams.topMargin = top;
+        }
+        relativeLayoutParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
+      }
 
-       var topMostFrame = frame.topmost(),
-       density = utils.layout.getDisplayDensity(),
-       left = settings.margins.left * density,
-       right = settings.margins.right * density,
-       top = settings.margins.top * density,
-       bottom = settings.margins.bottom * density,
-       viewWidth = topMostFrame.currentPage.android.getWidth(),
-       viewHeight = topMostFrame.currentPage.android.getHeight();
+      var adViewLayout = new android.widget.RelativeLayout(activity);
+      adViewLayout.addView(admob.adView, relativeLayoutParams);
 
-       var params = new android.widget.FrameLayout.LayoutParams(viewWidth - left - right, viewHeight - top - bottom);
-       params.setMargins(left, top, right, bottom);
-       mapView.setLayoutParams(params);
+      var relativeLayoutParamsOuter = new android.widget.RelativeLayout.LayoutParams(
+          android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
+          android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-       if (settings.center) {
-       mapView.setCenterCoordinate(new com.mapbox.mapboxsdk.geometry.LatLngZoom(settings.center.lat, settings.center.lng, settings.zoomLevel));
-       } else {
-       mapView.setZoomLevel(settings.zoomLevel);
-       }
+      topMostFrame.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
 
-       mapView.setCompassEnabled(!settings.hideCompass);
-       mapView.setRotateEnabled(!settings.disableRotation);
-       mapView.setScrollEnabled(!settings.disableScroll);
-       mapView.setZoomEnabled(!settings.disableZoom);
-
-       if (settings.showUserLocation) {
-       if (mapbox._fineLocationPermissionGranted()) {
-       mapView.setMyLocationEnabled(true);
-       } else {
-       // devs should ask permission upfront, otherwise enabling location will crash the app on Android 6
-       console.log("Mapbox plugin: not showing the user location on this device because persmission was not requested/granted");
-       }
-       }
-
-       // if we want to hide this, just render it outside the view
-       if (settings.hideAttribution) {
-       mapView.setAttributionMargins(-300,0,0,0);
-       }
-       // same can be done for the logo
-       if (settings.hideLogo) {
-       mapView.setLogoMargins(-300,0,0,0);
-       }
-
-       var activity = application.android.foregroundActivity;
-       var mapViewLayout = new android.widget.FrameLayout(activity);
-       mapViewLayout.addView(mapView);
-       topMostFrame.currentPage.android.getParent().addView(mapViewLayout);
-
-       if (settings.markers) {
-       for (var m in settings.markers) {
-       var marker = settings.markers[m];
-       var markerOptions = new com.mapbox.mapboxsdk.annotations.MarkerOptions();
-       markerOptions.title(marker.title);
-       markerOptions.snippet(marker.subtitle);
-       markerOptions.position(new com.mapbox.mapboxsdk.geometry.LatLng(marker.lat, marker.lng));
-       mapView.addMarker(markerOptions);
-       }
-       }
-       */
       resolve();
     } catch (ex) {
       console.log("Error in admob.createBanner: " + ex);
@@ -135,6 +135,13 @@ admob.createBanner = function(arg) {
 admob.hideBanner = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
+      if (admob.adView != null) {
+        var parent = admob.adView.getParent();
+        if (parent != null) {
+          parent.removeView(admob.adView);
+        }
+        admob.adView = null;
+      }
       resolve();
     } catch (ex) {
       console.log("Error in admob.hideBanner: " + ex);

@@ -1,8 +1,5 @@
 var admob = {};
 
-// TODO make sure we use these, or remove unused items
-admob.AD_SIZER = ["SMART", "BLA"];
-
 admob.AD_SIZE = {
   SMART_BANNER: "SMART",
   LARGE_BANNER: "LARGE",
@@ -10,22 +7,8 @@ admob.AD_SIZE = {
   MEDIUM_RECTANGLE: "MEDIUM",
   FULL_BANNER: "FULL",
   LEADERBOARD: "LEADERBOARD",
-  SKYSCRAPER: "SKYSCRAPER"
-};
-
-// TODO make sure we use these, or remove unused items
-admob.AD_POSITION = {
-  NO_CHANGE: 0,
-  TOP_LEFT: 1,
-  TOP_CENTER: 2,
-  TOP_RIGHT: 3,
-  LEFT: 4,
-  CENTER: 5,
-  RIGHT: 6,
-  BOTTOM_LEFT: 7,
-  BOTTOM_CENTER: 8,
-  BOTTOM_RIGHT: 9,
-  POS_XY: 10
+  SKYSCRAPER: "SKYSCRAPER",
+  FLUID: "FLUID"
 };
 
 admob.defaults = {
@@ -34,8 +17,7 @@ admob.defaults = {
     bottom: -1
   },
   testing: false,
-  size: admob.AD_SIZE.SMART_BANNER,
-  position: admob.AD_POSITION.TOP_CENTER // TODO verify this default
+  size: admob.AD_SIZE.SMART_BANNER
 };
 
 admob.merge = function merge(obj1, obj2){ // Our merge function

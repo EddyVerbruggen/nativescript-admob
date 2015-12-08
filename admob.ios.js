@@ -14,7 +14,7 @@ admob._getBannerType = function(size) {
     return kGADAdSizeLeaderboard;
   } else if (size == admob.AD_SIZE.SKYSCRAPER) {
     return kGADAdSizeSkyscraper;
-  } else if (size == admob.AD_SIZE.SMART_BANNER) {
+  } else if (size == admob.AD_SIZE.SMART_BANNER || size == admob.AD_SIZE.FLUID) {
     var orientation = UIDevice.currentDevice().orientation;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       console.log("-------- orientation now portrait");
@@ -26,7 +26,7 @@ admob._getBannerType = function(size) {
   } else {
     return kGADAdSizeInvalid;
   }
-}
+};
 
 admob.createBanner = function (arg) {
   return new Promise(function (resolve, reject) {
@@ -46,7 +46,7 @@ admob.createBanner = function (arg) {
       var origin = CGPointMake(0.0, originY);
       admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
-      admob.adView.adUnitID = settings.bannerId; // TODO pass in the publisher ID (this is the Banner ID for the {N} iOS demo app)
+      admob.adView.adUnitID = settings.iosBannerId;
 
       var adRequest = GADRequest.request();
 
