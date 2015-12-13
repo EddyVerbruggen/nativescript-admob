@@ -39,8 +39,7 @@ Here are the supported functions:
         function(error) {
           console.log("admob createBanner error: " + error);
         }
-    )
-  };
+  )
 ```
 
 ### function: hideBanner
@@ -56,10 +55,26 @@ since `show` will do that for you to prevent your app from crashing.
         function(error) {
           console.log("admob hideBanner error: " + error);
         }
-    )
-  };
+  )
 ```
 
-## Q&A
-- Q: What about Interstitial (full screen) banners?
-- A: They're planned for the next version of this plugin. Feel free to open a GitHub issue if your patience runs out.
+### function: createInterstitial
+To show a fullscreen banner you can use this function. Note that Interstitial banners need to be loaded before
+they can be shown, but don't worry: this plugin will manage that transparently for you.
+
+```js
+  admob.createInterstitial({
+      testing: true,
+      iosInterstitialId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
+      androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b1"]
+    }).then(
+        function() {
+          console.log("admob createInterstitial done");
+        },
+        function(error) {
+          console.log("admob createInterstitial error: " + error);
+        }
+  )
+```
