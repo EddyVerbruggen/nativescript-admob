@@ -10,12 +10,10 @@ var DemoAppModel = (function (_super) {
   DemoAppModel.prototype.doCreateBanner = function (size) {
     admob.createBanner({
       // if the 'view' property is not set, the banner is overlayed on the current top most view
-      testing: false,
+      testing: true,
       size: size,
       iosBannerId: "ca-app-pub-9517346003011652/3985369721",
-      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122", // Note: not used yet
       androidBannerId: "ca-app-pub-9517346003011652/7749101329",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122", // Note: not used yet
       // Android automatically adds the connected device as test device with testing:true, iOS does not
       iosTestDeviceIds: ["yourTestDeviceUDIDs", "canBeAddedHere"],
       margins: {
@@ -29,6 +27,23 @@ var DemoAppModel = (function (_super) {
         },
         function(error) {
           console.log("admob createBanner error: " + error);
+        }
+    )
+  };
+
+  DemoAppModel.prototype.doCreateInterstitial = function () {
+    admob.createInterstitial({
+      testing: true,
+      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b1"]
+    }).then(
+        function() {
+          console.log("admob createInterstitial done");
+        },
+        function(error) {
+          console.log("admob createInterstitial error: " + error);
         }
     )
   };

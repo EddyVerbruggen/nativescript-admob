@@ -30,3 +30,7 @@ button {
 .button-hide {
   background-color: #db3015;
 }
+
+.button-interstitial {
+  background-color: #808080;  
+}

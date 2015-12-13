@@ -14,7 +14,7 @@
       </TabViewItem>
       <TabViewItem title="Demo">
         <TabViewItem.view>
-          <GridLayout columns="*, *" rows="auto, auto, auto" horizontalAlignment="center" cssClass="tab-content">
+          <GridLayout columns="*, *" rows="auto, auto, auto, auto" horizontalAlignment="center" cssClass="tab-content">
 
             <Button row="0" col="0" text="smart banner" tap="{{ doCreateSmartBanner }}" />
             <Button row="0" col="1"  text="regular banner" tap="{{ doCreateRegularBanner }}"/>
@@ -23,7 +23,9 @@
             <Button row="1" col="1"  text="large banner" tap="{{ doCreateLargeBanner }}"/>
 
             <Button row="2" col="0" text="rectangle" tap="{{ doCreateRectangularBanner }}" />
-            <Button row="2" col="1" text="hide banner" tap="{{ doHideBanner }}" cssClass="button-hide"/>
+            <Button row="2" col="1" text="interstitial" tap="{{ doCreateInterstitial }}" cssClass="button-interstitial" />
+
+            <Button row="3" colSpan="2" text="hide banner" tap="{{ doHideBanner }}" cssClass="button-hide"/>
 
           </GridLayout>
         </TabViewItem.view>

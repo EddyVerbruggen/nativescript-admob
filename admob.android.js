@@ -132,6 +132,35 @@ admob.createBanner = function(arg) {
   });
 };
 
+admob.createInterstitial = function(arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var settings = admob.merge(arg, admob.defaults);
+      var activity = application.android.foregroundActivity;
+      admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
+      admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
+
+      // Interstitial ads must be loaded before they can be shown, so adding a listener
+      var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
+        onAdLoaded: function () {
+          admob.interstitialView.show();
+          resolve();
+        },
+        onAdFailedToLoad: function (errorCode) {
+          reject(errorCode);
+        }
+      });
+      admob.interstitialView.setAdListener(new InterstitialAdListener());
+
+      var ad = admob._buildAdRequest(settings);
+      admob.interstitialView.loadAd(ad);
+    } catch (ex) {
+      console.log("Error in admob.createBanner: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 admob.hideBanner = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
