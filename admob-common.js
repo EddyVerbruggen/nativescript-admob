@@ -39,5 +39,6 @@ admob.merge = function merge(obj1, obj2){ // Our merge function
 };
 
 module.adView = null;
+module.interstitialView = null;
 
 module.exports = admob;

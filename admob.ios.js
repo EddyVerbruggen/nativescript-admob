@@ -1,6 +1,28 @@
 var admob = require("./admob-common");
 var application = require("application");
 
+var GADBannerViewDelegateImpl = (function (_super) {
+    __extends(GADBannerViewDelegateImpl, _super);
+    function GADBannerViewDelegateImpl() {
+      _super.apply(this, arguments);
+    }
+    GADBannerViewDelegateImpl.new = function () {
+      return _super.new.call(this);
+    };
+    GADBannerViewDelegateImpl.prototype.initWithCallback = function (callback) {
+      this._callback = callback;
+      return this;
+    };
+    GADBannerViewDelegateImpl.prototype.interstitialDidReceiveAd = function (ad) {
+      this._callback(ad);
+    };
+    GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
+      this._callback(ad, error);
+    };
+    GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+    return GADBannerViewDelegateImpl;
+})(NSObject);
+
 admob._getBannerType = function(size) {
   if (size == admob.AD_SIZE.BANNER) {
     return kGADAdSizeBanner;
@@ -64,7 +86,7 @@ admob.createBanner = function (arg) {
 
       admob.adView.loadRequest(adRequest);
 
-      // TODO consider listening to delegate features like 'ad loaded', but not for v1. See https://developers.google.com/admob/ios/banner
+      // TODO consider listening to delegate features like 'ad loaded', but not for v1 (did do it for interstitial below already)
       //adView.delegate = self;
 
       view.addSubview(admob.adView);
@@ -81,6 +103,43 @@ admob.createBanner = function (arg) {
       resolve();
     } catch (ex) {
       console.log("Error in admob.createBanner: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+admob.createInterstitial = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var settings = admob.merge(arg, admob.defaults);
+      admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
+
+      // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
+      var delegate = GADBannerViewDelegateImpl.new().initWithCallback(function (ad, error) {
+        if (error) {
+          reject(error);
+        } else {
+          // now we can safely show it
+          admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication().keyWindow.rootViewController);
+          resolve();          
+        }
+        delegate = undefined;
+      });
+      admob.interstitialView.delegate = delegate;
+
+      var adRequest = GADRequest.request();
+
+      if (settings.testing) {
+        var testDevices = [kGADSimulatorID];
+        if (settings.iosTestDeviceIds) {
+          testDevices = testDevices.concat(settings.iosTestDeviceIds);
+        }
+        adRequest.testDevices = testDevices;
+      }
+
+      admob.interstitialView.loadRequest(adRequest);
+    } catch (ex) {
+      console.log("Error in admob.interstitialView: " + ex);
       reject(ex);
     }
   });
