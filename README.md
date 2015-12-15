@@ -68,7 +68,7 @@ they can be shown, but don't worry: this plugin will manage that transparently f
       iosInterstitialId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
       androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
       // Android automatically adds the connected device as test device with testing:true, iOS does not
-      iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b1"]
+      iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"]
     }).then(
         function() {
           console.log("admob createInterstitial done");
