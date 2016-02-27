@@ -53,7 +53,7 @@ admob._getBannerType = function(size) {
 admob.createBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (admob.adView != null) {
+      if (admob.adView !== null) {
         admob.adView.removeFromSuperview();
         admob.adView = null;
       }
@@ -92,11 +92,11 @@ admob.createBanner = function (arg) {
       view.addSubview(admob.adView);
 
       application.on(application.orientationChangedEvent, function (data) {
-        if (admob.adView != null) {
+        if (admob.adView !== null) {
           console.log("-------- orientation changed to " + data.newValue + ", recreating the adview so it displays nicely");
           admob.hideBanner().then(function(res) {
             admob.createBanner(arg);
-          })
+          });
         }
       });
 
@@ -148,12 +148,12 @@ admob.createInterstitial = function (arg) {
 admob.hideBanner = function () {
   return new Promise(function (resolve, reject) {
     try {
-      if (admob.adView != null) {
+      if (admob.adView !== null) {
         //adView.delegate = null;
         admob.adView.removeFromSuperview();
         admob.adView = null;
       }
-      resolve("Done");
+      resolve();
     } catch (ex) {
       console.log("Error in admob.hideBanner: " + ex);
       reject(ex);

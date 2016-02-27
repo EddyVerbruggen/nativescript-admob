@@ -61,7 +61,7 @@ admob._buildAdRequest = function (settings) {
     var activity = application.android.foregroundActivity;
     var ANDROID_ID = android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     var deviceId = admob._md5(ANDROID_ID);
-    if (deviceId != null) {
+    if (deviceId !== null) {
       deviceId = deviceId.toUpperCase();
       console.log("Treating this deviceId as testdevice: " + deviceId);
       builder.addTestDevice(deviceId);
@@ -78,9 +78,9 @@ admob.createBanner = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
       // always close a previous opened banner
-      if (admob.adView != null) {
+      if (admob.adView !== null) {
         var parent = admob.adView.getParent();
-        if (parent != null) {
+        if (parent !== null) {
           parent.removeView(admob.adView);
         }
       }
@@ -164,9 +164,9 @@ admob.createInterstitial = function(arg) {
 admob.hideBanner = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (admob.adView != null) {
+      if (admob.adView !== null) {
         var parent = admob.adView.getParent();
-        if (parent != null) {
+        if (parent !== null) {
           parent.removeView(admob.adView);
         }
         admob.adView = null;
