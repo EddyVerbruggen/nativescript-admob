@@ -1,4 +1,4 @@
-# NativeScript AdMob Plugin
+# NativeScript AdMob plugin
 
 Earn some well earned $$$ with your {N} app by adding Google AdMob banners.
 
@@ -21,7 +21,7 @@ Here are the supported functions:
   admob.createBanner({
       // if this 'view' property is not set, the banner is overlayed on the current top most view
       // view: ..,
-      testing: true, // set to false to get actual banners
+      testing: true, // set to false to get real banners
       size: size, // anything in admob.AD_SIZE, like admob.AD_SIZE.SMART_BANNER
       iosBannerId: "ca-app-pub-XXXXXX/YYYYYY", // add your own
       androidBannerId: "ca-app-pub-AAAAAAAA/BBBBBBB", // add your own
@@ -43,8 +43,8 @@ Here are the supported functions:
 ```
 
 ### function: hideBanner
-NOTE: If you want to show a different banner than the one showing you don't need to call the `hide` function
-since `show` will do that for you to prevent your app from crashing.
+NOTE: If you want to show a different banner than the one showing you don't need to call `hideBanner`
+since `createBanner` will do that for you to prevent your app from crashing.
 
 ```js
   // the .then(.. bit is optional btw
