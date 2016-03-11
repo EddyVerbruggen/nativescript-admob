@@ -1,3 +1,11 @@
+android {
+    productFlavors {
+        "nativescript-admob" {
+            dimension "nativescript-admob"
+        }
+    }
+}
+
 dependencies {
     compile "com.google.android.gms:play-services-ads:7.5.0"
 }
