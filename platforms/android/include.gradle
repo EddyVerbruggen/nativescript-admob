@@ -1,7 +1,7 @@
 android {
     productFlavors {
-        "nativescript-admob" {
-            dimension "nativescript-admob"
+        "admob" {
+            dimension "admob"
         }
     }
 }
