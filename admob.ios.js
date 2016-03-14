@@ -53,7 +53,7 @@ admob._getBannerType = function(size) {
 admob.createBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (admob.adView !== null) {
+      if (admob.adView !== null && admob.adView !== undefined) {
         admob.adView.removeFromSuperview();
         admob.adView = null;
       }
