@@ -78,7 +78,7 @@ admob.createBanner = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
       // always close a previous opened banner
-      if (admob.adView !== null) {
+      if (admob.adView !== null && admob.adView !== undefined) {
         var parent = admob.adView.getParent();
         if (parent !== null) {
           parent.removeView(admob.adView);
