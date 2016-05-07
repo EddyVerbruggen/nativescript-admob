@@ -42,6 +42,9 @@ Here are the supported functions:
   )
 ```
 
+Note that you can trigger the function above at any moment, and since version 1.1.4
+of this plugin you can even call it [from the `Page.loaded` event](https://github.com/EddyVerbruggen/nativescript-admob-demo/blob/master/AdMob/app/main-page.js#L9).
+
 ### function: hideBanner
 NOTE: If you want to show a different banner than the one showing you don't need to call `hideBanner`
 since `createBanner` will do that for you to prevent your app from crashing.

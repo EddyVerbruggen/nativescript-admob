@@ -96,8 +96,7 @@ admob.createBanner = function(arg) {
       var ad = admob._buildAdRequest(settings);
       admob.adView.loadAd(ad);
 
-      var topMostFrame = frame.topmost(),
-          density = utils.layout.getDisplayDensity(),
+      var density = utils.layout.getDisplayDensity(),
           top = settings.margins.top * density,
           bottom = settings.margins.bottom * density;
 
@@ -122,7 +121,11 @@ admob.createBanner = function(arg) {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      topMostFrame.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+      // wrapping it in a timeout makes sure that when this function is loaded from
+      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'  
+      setTimeout(function() {
+        frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+      }, 0);
 
       resolve();
     } catch (ex) {
