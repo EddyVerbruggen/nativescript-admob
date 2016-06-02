@@ -53,13 +53,21 @@ admob._md5 = function(input) {
   }
 };
 
+// need to cache this baby since after an Interstitial was shown a second won't resolve the activity
+admob.activity = null;
+admob._getActivity = function() {
+  if (admob.activity === null) {
+    admob.activity = application.android.foregroundActivity;      
+  }
+  return admob.activity;
+};
+
 admob._buildAdRequest = function (settings) {
   var builder = new com.google.android.gms.ads.AdRequest.Builder();
   if (settings.testing) {
     builder.addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
     // This will request test ads on the emulator and device by passing this hashed device ID.
-    var activity = application.android.foregroundActivity;
-    var ANDROID_ID = android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+    var ANDROID_ID = android.provider.Settings.Secure.getString(admob._getActivity().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     var deviceId = admob._md5(ANDROID_ID);
     if (deviceId !== null) {
       deviceId = deviceId.toUpperCase();
@@ -85,8 +93,7 @@ admob.createBanner = function(arg) {
         }
       }
       var settings = admob.merge(arg, admob.defaults);
-      var activity = application.android.foregroundActivity;
-      admob.adView = new com.google.android.gms.ads.AdView(activity);
+      admob.adView = new com.google.android.gms.ads.AdView(admob._getActivity());
       admob.adView.setAdUnitId(settings.androidBannerId);
       var bannerType = admob._getBannerType(settings.size);
       admob.adView.setAdSize(bannerType);
@@ -114,7 +121,7 @@ admob.createBanner = function(arg) {
         relativeLayoutParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
       }
 
-      var adViewLayout = new android.widget.RelativeLayout(activity);
+      var adViewLayout = new android.widget.RelativeLayout(admob._getActivity());
       adViewLayout.addView(admob.adView, relativeLayoutParams);
 
       var relativeLayoutParamsOuter = new android.widget.RelativeLayout.LayoutParams(
@@ -139,8 +146,7 @@ admob.createInterstitial = function(arg) {
   return new Promise(function (resolve, reject) {
     try {
       var settings = admob.merge(arg, admob.defaults);
-      var activity = application.android.foregroundActivity;
-      admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
+      admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(admob._getActivity());
       admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
       // Interstitial ads must be loaded before they can be shown, so adding a listener
@@ -151,6 +157,10 @@ admob.createInterstitial = function(arg) {
         },
         onAdFailedToLoad: function (errorCode) {
           reject(errorCode);
+        },
+        onAdClosed: function() {
+          admob.interstitialView.setAdListener(null);
+          admob.interstitialView = null;
         }
       });
       admob.interstitialView.setAdListener(new InterstitialAdListener());
