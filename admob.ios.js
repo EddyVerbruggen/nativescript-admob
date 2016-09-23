@@ -1,5 +1,6 @@
 var admob = require("./admob-common");
 var application = require("application");
+var utils = require("utils/utils");
 
 var GADBannerViewDelegateImpl = (function (_super) {
     __extends(GADBannerViewDelegateImpl, _super);
@@ -37,12 +38,10 @@ admob._getBannerType = function(size) {
   } else if (size == admob.AD_SIZE.SKYSCRAPER) {
     return kGADAdSizeSkyscraper;
   } else if (size == admob.AD_SIZE.SMART_BANNER || size == admob.AD_SIZE.FLUID) {
-    var orientation = UIDevice.currentDevice().orientation;
+    var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
-      console.log("-------- orientation now portrait");
       return kGADAdSizeSmartBannerPortrait;
     } else {
-      console.log("-------- orientation now landscape");
       return kGADAdSizeSmartBannerLandscape;
     }
   } else {
@@ -58,7 +57,7 @@ admob.createBanner = function (arg) {
         admob.adView = null;
       }
 
-      admob.defaults.view = UIApplication.sharedApplication().keyWindow.rootViewController.view;
+      admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
       var settings = admob.merge(arg, admob.defaults);
       var view = settings.view;
       var bannerType = admob._getBannerType(settings.size);
@@ -81,8 +80,8 @@ admob.createBanner = function (arg) {
         adRequest.testDevices = testDevices;
       }
 
-      admob.adView.rootViewController = UIApplication.sharedApplication().keyWindow.rootViewController;
-      //var statusbarFrame = UIApplication.sharedApplication().statusBarFrame;
+      admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
+      //var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
 
       admob.adView.loadRequest(adRequest);
 
@@ -93,7 +92,6 @@ admob.createBanner = function (arg) {
 
       application.on(application.orientationChangedEvent, function (data) {
         if (admob.adView !== null) {
-          console.log("-------- orientation changed to " + data.newValue + ", recreating the adview so it displays nicely");
           admob.hideBanner().then(function(res) {
             admob.createBanner(arg);
           });
@@ -120,8 +118,8 @@ admob.createInterstitial = function (arg) {
           reject(error);
         } else {
           // now we can safely show it
-          admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication().keyWindow.rootViewController);
-          resolve();          
+          admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+          resolve();
         }
         delegate = undefined;
       });
