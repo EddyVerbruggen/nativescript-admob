@@ -16,7 +16,7 @@ If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen
 
 Here are the supported functions:
 
-### function: createBanner
+### createBanner
 ```js
   var admob = require("nativescript-admob");
 
@@ -47,7 +47,7 @@ Here are the supported functions:
 Note that you can trigger the function above at any moment, and since version 1.1.4
 of this plugin you can even call it [from the `Page.loaded` event](https://github.com/EddyVerbruggen/nativescript-admob-demo/blob/master/AdMob/app/main-page.js#L9).
 
-### function: hideBanner
+### hideBanner
 NOTE: If you want to show a different banner than the one showing you don't need to call `hideBanner`
 since `createBanner` will do that for you to prevent your app from crashing.
 
@@ -63,7 +63,7 @@ since `createBanner` will do that for you to prevent your app from crashing.
   )
 ```
 
-### function: createInterstitial
+### createInterstitial
 To show a fullscreen banner you can use this function. Note that Interstitial banners need to be loaded before
 they can be shown, but don't worry: this plugin will manage that transparently for you.
 
