@@ -1,6 +1,6 @@
 {
   "name": "nativescript-admob",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Make money with your app by using Google's AdMob ads.",
   "main": "admob",
   "nativescript": {
@@ -14,8 +14,14 @@
     "url": "git+https://github.com/eddyverbruggen/nativescript-admob.git"
   },
   "keywords": [
+    "exosystem:nativescript",
     "NativeScript",
-    "AdMob"
+    "iOS",
+    "Android",
+    "AdMob",
+    "Banner",
+    "Interstitial",
+    "Advertisements"
   ],
   "author": {
     "name": "Telerik / Eddy Verbruggen",

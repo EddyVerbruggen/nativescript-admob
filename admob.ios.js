@@ -25,6 +25,10 @@ var GADBannerViewDelegateImpl = (function (_super) {
 })(NSObject);
 
 admob._getBannerType = function(size) {
+  // Note that when the app is archived symbols like kGADAdSizeSmartBannerPortrait
+  // are normally not available in {N}.. that's why we added those to build.xcconfig.
+  // However, if that still fails this would work: GADAdSizeFromCGSize(CGSizeMake(250, 250))
+  // (but we then need to hardcode the sizes..)
   if (size == admob.AD_SIZE.BANNER) {
     return kGADAdSizeBanner;
   } else if (size == admob.AD_SIZE.LARGE_BANNER) {
