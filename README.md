@@ -2,8 +2,6 @@
 
 Earn some well earned $$$ with your {N} app by adding Google AdMob banners.
 
-> Note that version 1.2.0+ requires NativeScript 2.3.0+.
-
 ## Installation
 From the command prompt go to your app's root folder and execute:
 ```
