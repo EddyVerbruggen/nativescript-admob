@@ -81,3 +81,10 @@ they can be shown, but don't worry: this plugin will manage that transparently f
         }
   )
 ```
+
+## Tutorials
+
+Need a little more help getting started?  Check out these tutorials for using Admob in a NativeScript Android and iOS application.
+
+* [Monetize with Google Admob in a NativeScript Vanilla Application](https://www.thepolyglotdeveloper.com/2016/03/monetize-with-google-admob-in-a-nativescript-mobile-app/)
+* [Monetize with Google Admob in a NativeScript Angular Application](https://www.thepolyglotdeveloper.com/2016/11/google-admob-nativescript-angular-2/)
