@@ -1,6 +1,8 @@
 var admob = require("./admob-common");
 var application = require("application");
 var utils = require("utils/utils");
+var device = require("platform").device;
+var DeviceType = require("ui/enums").DeviceType;
 
 var GADBannerViewDelegateImpl = (function (_super) {
     __extends(GADBannerViewDelegateImpl, _super);
@@ -59,12 +61,13 @@ admob._getBannerType = function(size) {
     return {"size":{"width":120,"height":600},"flags":0};
   } else if (size == admob.AD_SIZE.SMART_BANNER || size == admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
+    var isIPad = device.deviceType === DeviceType.Tablet;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return {"size":{"width":0,"height":0},"flags":18};
+      return {"size":{"width":0,"height":0,"smartHeight":isIPad ? 90 : 50},"flags":18};
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return {"size":{"width":0,"height":0},"flags":26};
+      return {"size":{"width":0,"height":0,"smartHeight":isIPad ? 90 : 32},"flags":26};
     }
   } else {
     // return kGADAdSizeInvalid;
@@ -85,8 +88,15 @@ admob.createBanner = function (arg) {
       var view = settings.view;
       var bannerType = admob._getBannerType(settings.size);
 
-      var originX = (view.frame.size.width - bannerType.size.width) / 2;
-      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - bannerType.size.height - settings.margins.bottom : 0.0);
+      // To get the actual size of the banner we can dump this (doesn't work for release builds)
+      // var adViewSize = CGSizeFromGADAdSize(bannerType);
+      // console.log(JSON.stringify(adViewSize));
+
+      var adWidth = bannerType.size.width === 0 ? view.frame.size.width : bannerType.size.width;
+      var adHeight = bannerType.size.smartHeight ? bannerType.size.smartHeight : bannerType.size.height;
+
+      var originX = (view.frame.size.width - adWidth) / 2;
+      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adHeight - settings.margins.bottom : 0.0);
       var origin = CGPointMake(originX, originY);
       admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
