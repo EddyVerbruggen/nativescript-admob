@@ -8,6 +8,9 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-admob
 ```
 
+### iOS
+Run `pod repo update` from a Terminal, otherwise the required Pod version may not be available on your system.
+
 ## Usage
 
 If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-admob-demo).

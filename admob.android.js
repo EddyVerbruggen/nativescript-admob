@@ -3,7 +3,7 @@ var application = require("application");
 var frame = require("ui/frame");
 var admob = require("./admob-common");
 
-admob._getBannerType = function(size) {
+admob._getBannerType = function (size) {
   if (size == admob.AD_SIZE.BANNER) {
     return com.google.android.gms.ads.AdSize.BANNER;
   } else if (size == admob.AD_SIZE.LARGE_BANNER) {
@@ -27,7 +27,7 @@ admob._getBannerType = function(size) {
   }
 };
 
-admob._md5 = function(input) {
+admob._md5 = function (input) {
   try {
     var digest = java.security.MessageDigest.getInstance("MD5");
     var bytes = [];
@@ -43,7 +43,7 @@ admob._md5 = function(input) {
       var h = java.lang.Integer.toHexString(0xFF & messageDigest[i]);
       while (h.length < 2)
         h = "0" + h;
-        hexString += h;
+      hexString += h;
     }
     return hexString;
 
@@ -55,9 +55,9 @@ admob._md5 = function(input) {
 
 // need to cache this baby since after an Interstitial was shown a second won't resolve the activity
 admob.activity = null;
-admob._getActivity = function() {
+admob._getActivity = function () {
   if (admob.activity === null) {
-    admob.activity = application.android.foregroundActivity;      
+    admob.activity = application.android.foregroundActivity;
   }
   return admob.activity;
 };
@@ -76,9 +76,8 @@ admob._buildAdRequest = function (settings) {
     }
   }
 
-  if(settings.keywords !== null && settings.keywords.length > 0){
-
-    for(var i = 0; i < settings.keywords.length; i++){
+  if (settings.keywords !== undefined && settings.keywords.length > 0) {
+    for (var i = 0; i < settings.keywords.length; i++) {
       builder.addKeyword(settings.keywords[i]);
     }
   }
@@ -90,7 +89,7 @@ admob._buildAdRequest = function (settings) {
   return builder.build();
 };
 
-admob.createBanner = function(arg) {
+admob.createBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       // always close a previous opened banner
@@ -137,8 +136,8 @@ admob.createBanner = function(arg) {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // wrapping it in a timeout makes sure that when this function is loaded from
-      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'  
-      setTimeout(function() {
+      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
+      setTimeout(function () {
         frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
       }, 0);
 
@@ -150,7 +149,7 @@ admob.createBanner = function(arg) {
   });
 };
 
-admob.createInterstitial = function(arg) {
+admob.createInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var settings = admob.merge(arg, admob.defaults);
@@ -166,7 +165,7 @@ admob.createInterstitial = function(arg) {
         onAdFailedToLoad: function (errorCode) {
           reject(errorCode);
         },
-        onAdClosed: function() {
+        onAdClosed: function () {
           admob.interstitialView.setAdListener(null);
           admob.interstitialView = null;
         }
@@ -182,7 +181,7 @@ admob.createInterstitial = function(arg) {
   });
 };
 
-admob.hideBanner = function(arg) {
+admob.hideBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (admob.adView !== null) {

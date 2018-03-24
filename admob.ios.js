@@ -5,28 +5,30 @@ var device = require("platform").device;
 var DeviceType = require("ui/enums").DeviceType;
 
 var GADBannerViewDelegateImpl = (function (_super) {
-    __extends(GADBannerViewDelegateImpl, _super);
-    function GADBannerViewDelegateImpl() {
-      _super.apply(this, arguments);
-    }
-    GADBannerViewDelegateImpl.new = function () {
-      return _super.new.call(this);
-    };
-    GADBannerViewDelegateImpl.prototype.initWithCallback = function (callback) {
-      this._callback = callback;
-      return this;
-    };
-    GADBannerViewDelegateImpl.prototype.interstitialDidReceiveAd = function (ad) {
-      this._callback(ad);
-    };
-    GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
-      this._callback(ad, error);
-    };
-    GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
-    return GADBannerViewDelegateImpl;
+  __extends(GADBannerViewDelegateImpl, _super);
+
+  function GADBannerViewDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  GADBannerViewDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  GADBannerViewDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  GADBannerViewDelegateImpl.prototype.interstitialDidReceiveAd = function (ad) {
+    this._callback(ad);
+  };
+  GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
+    this._callback(ad, error);
+  };
+  GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+  return GADBannerViewDelegateImpl;
 })(NSObject);
 
-admob._getBannerType = function(size) {
+admob._getBannerType = function (size) {
   // Note that when the app is archived symbols like kGADAdSizeSmartBannerPortrait
   // are not available in {N}.. that's why we've hardcoded the runtime values here.
 
@@ -43,35 +45,35 @@ admob._getBannerType = function(size) {
 
   if (size == admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
-    return {"size":{"width":320,"height":50},"flags":0};
+    return {"size": {"width": 320, "height": 50}, "flags": 0};
   } else if (size == admob.AD_SIZE.LARGE_BANNER) {
     // return kGADAdSizeLargeBanner;
-    return {"size":{"width":320,"height":100},"flags":0};
+    return {"size": {"width": 320, "height": 100}, "flags": 0};
   } else if (size == admob.AD_SIZE.MEDIUM_RECTANGLE) {
     // return kGADAdSizeMediumRectangle;
-    return {"size":{"width":300,"height":250},"flags":0};
+    return {"size": {"width": 300, "height": 250}, "flags": 0};
   } else if (size == admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
-    return {"size":{"width":468,"height":60},"flags":0};
+    return {"size": {"width": 468, "height": 60}, "flags": 0};
   } else if (size == admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
-    return {"size":{"width":728,"height":90},"flags":0};
+    return {"size": {"width": 728, "height": 90}, "flags": 0};
   } else if (size == admob.AD_SIZE.SKYSCRAPER) {
     // return kGADAdSizeSkyscraper;
-    return {"size":{"width":120,"height":600},"flags":0};
+    return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size == admob.AD_SIZE.SMART_BANNER || size == admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = device.deviceType === DeviceType.Tablet;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return {"size":{"width":0,"height":0,"smartHeight":isIPad ? 90 : 50},"flags":18};
+      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return {"size":{"width":0,"height":0,"smartHeight":isIPad ? 90 : 32},"flags":26};
+      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 32}, "flags": 26};
     }
   } else {
     // return kGADAdSizeInvalid;
-    return {"size":{"width":-1,"height":-1},"flags":0};
+    return {"size": {"width": -1, "height": -1}, "flags": 0};
   }
 };
 
@@ -112,7 +114,7 @@ admob.createBanner = function (arg) {
         adRequest.testDevices = testDevices;
       }
 
-      if (settings.keywords !== null) {
+      if (settings.keywords !== undefined) {
         adRequest.keywords = settings.keywords;
       }
 
@@ -128,7 +130,7 @@ admob.createBanner = function (arg) {
 
       application.on(application.orientationChangedEvent, function (data) {
         if (admob.adView !== null) {
-          admob.hideBanner().then(function(res) {
+          admob.hideBanner().then(function (res) {
             admob.createBanner(arg);
           });
         }
