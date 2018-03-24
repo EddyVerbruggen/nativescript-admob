@@ -75,6 +75,14 @@ admob._buildAdRequest = function (settings) {
       builder.addTestDevice(deviceId);
     }
   }
+
+  if(settings.keywords !== null && settings.keywords.length > 0){
+
+    for(var i = 0; i < settings.keywords.length; i++){
+      builder.addKeyword(settings.keywords[i]);
+    }
+  }
+
   var bundle = new android.os.Bundle();
   bundle.putInt("nativescript", 1);
   var adextras = new com.google.android.gms.ads.mediation.admob.AdMobExtras(bundle);
