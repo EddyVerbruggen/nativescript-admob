@@ -57,7 +57,12 @@ declare module "nativescript-admob" {
          * Default: -1 (ignored).
          */
         bottom?: number;
-      }
+      },
+
+      /**
+       * Specify keywords for ad targeting
+       */
+      keywords?: string[];
     }
 
     export interface CreateInterstitialOptions {
@@ -83,6 +88,11 @@ declare module "nativescript-admob" {
        *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
        */
       iosTestDeviceIds?: string[];
+
+      /**
+       * Specify keywords for ad targeting
+       */
+      keywords?: string[];
     }
 
     /**

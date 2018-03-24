@@ -112,6 +112,10 @@ admob.createBanner = function (arg) {
         adRequest.testDevices = testDevices;
       }
 
+      if (settings.keywords !== null) {
+        adRequest.keywords = settings.keywords;
+      }
+
       admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
       //var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
 
