@@ -31,7 +31,8 @@ Here are the supported functions:
         // if both are set, top wins
         //top: 10
         bottom: 50
-      }
+      },
+      keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
     }).then(
         function() {
           console.log("admob createBanner done");
@@ -71,7 +72,8 @@ they can be shown, but don't worry: this plugin will manage that transparently f
       iosInterstitialId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
       androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
       // Android automatically adds the connected device as test device with testing:true, iOS does not
-      iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"]
+      iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"],
+      keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
     }).then(
         function() {
           console.log("admob createInterstitial done");
