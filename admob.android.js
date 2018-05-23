@@ -135,10 +135,14 @@ admob.createBanner = function (arg) {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      // wrapping it in a timeout makes sure that when this function is loaded from
-      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
+      // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
+      // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(function () {
-        frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        if (frame.topmost() !== undefined) {
+          frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else {
+          application.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+        }
       }, 0);
 
       resolve();
