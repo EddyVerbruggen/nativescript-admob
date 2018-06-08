@@ -49,7 +49,27 @@ export class HelloWorldModel extends Observable {
   };
 
   private createBanner(size: AD_SIZE): void {
-
+    const testing = true;
+    createBanner({
+      // if this 'view' property is not set, the banner is overlayed on the current top most view
+      // view: ..,
+      size: size,
+      iosBannerId: "ca-app-pub-9517346003011652/3985369721",
+      androidBannerId: testing
+          ? "ca-app-pub-3940256099942544/6300978111"  // global test banner id
+          : "ca-app-pub-9517346003011652/7749101329", // our registered banner id
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      // iosTestDeviceIds: ["yourTestDeviceUDIDs", "canBeAddedHere"],
+      margins: {
+        // if both are set, top wins
+        // top: 10
+        bottom: isIOS ? 50 : 0
+      },
+      keywords: ["foo", "bar"]
+    }).then(
+        () => this.message = "Banner created",
+        error => this.message = "Error creating banner: " + error
+    )
   }
 
   private doCreateInterstitial(size: AD_SIZE): void {

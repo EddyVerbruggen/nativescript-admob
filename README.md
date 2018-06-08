@@ -25,12 +25,15 @@ Here are the supported functions:
 import { AD_SIZE, createBanner, hideBanner } from "nativescript-admob";
 import { isIOS } from "tns-core-modules/platform";
 
+const testing = true;
 createBanner({
-  // if the 'view' property is not set, the banner is overlayed on the current top most view
-  testing: true,
+  // if this 'view' property is not set, the banner is overlayed on the current top most view
+  // view: ..,
   size: AD_SIZE.SMART_BANNER,
   iosBannerId: "ca-app-pub-9517346003011652/3985369721",
-  androidBannerId: "ca-app-pub-9517346003011652/7749101329",
+  androidBannerId: testing
+      ? "ca-app-pub-3940256099942544/6300978111"  // global test banner id
+      : "ca-app-pub-9517346003011652/7749101329", // our registered banner id
   // Android automatically adds the connected device as test device with testing:true, iOS does not
   // iosTestDeviceIds: ["yourTestDeviceUDIDs", "canBeAddedHere"],
   margins: {
