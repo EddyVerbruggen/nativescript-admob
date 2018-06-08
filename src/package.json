@@ -9,6 +9,10 @@
       "ios": "2.3.0"
     }
   },
+  "scripts": {
+    "demo.android": "cd ../demo && tns run android",
+    "demo.android.release": "echo '*** Replace MY_PASSWORD ***' && cd ../demo && tns build android --release --for-device --key-store-path ../../xservices.keystore --key-store-password MY_PASSWORD --key-store-alias xservices --key-store-alias-password MY_PASSWORD && adb install ../demo/platforms/android/app/build/outputs/apk/release/app-release.apk"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eddyverbruggen/nativescript-admob.git"
@@ -27,10 +31,7 @@
     "name": "Eddy Verbruggen",
     "email": "eddyverbruggen@gmail.com"
   },
-  "license": {
-    "type": "MIT",
-    "url": "https://github.com/eddyverbruggen/nativescript-admob/blob/master/LICENSE"
-  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/eddyverbruggen/nativescript-admob/issues"
   },

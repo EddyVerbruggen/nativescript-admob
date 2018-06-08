@@ -1,9 +1,5 @@
 android {
-    productFlavors {
-        "admob" {
-            dimension "admob"
-        }
-    }
+    
 }
 
 dependencies {
