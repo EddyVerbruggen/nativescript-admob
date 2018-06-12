@@ -10,7 +10,7 @@
 
     <GridLayout columns="*, *" rows="auto, auto, auto, auto" horizontalAlignment="center">
 
-      <Button row="0" col="0" text="smart banner 2" tap="{{ doCreateSmartBanner }}"/>
+      <Button row="0" col="0" text="smart banner" tap="{{ doCreateSmartBanner }}"/>
       <Button row="0" col="1" text="regular banner" tap="{{ doCreateRegularBanner }}"/>
 
       <Button row="1" col="0" text="skyscraper" tap="{{ doCreateSkyscraperBanner }}"/>
