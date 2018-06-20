@@ -196,9 +196,9 @@ admob.createInterstitial = function (arg) {
 admob.hideBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (admob.adView !== null) {
-        var parent = admob.adView.getParent();
-        if (parent !== null) {
+      if (admob.adView != null) {
+        var parent = admob && admob.adView && admob.adView.getParent();
+        if (parent != null) {
           parent.removeView(admob.adView);
         }
         admob.adView = null;
