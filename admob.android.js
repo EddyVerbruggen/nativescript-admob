@@ -131,7 +131,7 @@ admob.createBanner = function(arg) {
       // wrapping it in a timeout makes sure that when this function is loaded from
       // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'  
       setTimeout(function() {
-        if (frame.topmost().currentPage) {
+        if (frame.topmost().currentPage && frame.topmost().currentPage.android.getParent()) {
           frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
         }
       }, 0);
