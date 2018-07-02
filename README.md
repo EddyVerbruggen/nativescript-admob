@@ -1,6 +1,14 @@
 # NativeScript AdMob plugin
 
-Earn some well earned $$$ with your {N} app by adding Google AdMob banners.
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![Twitter Follow][twitter-image]][twitter-url]
+
+[npm-image]:http://img.shields.io/npm/v/nativescript-admob.svg
+[npm-url]:https://npmjs.org/package/nativescript-admob
+[downloads-image]:http://img.shields.io/npm/dm/nativescript-admob.svg
+[twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
+[twitter-url]:https://twitter.com/eddyverbruggen
 
 ## Installation
 From the command prompt go to your app's root folder and execute:
