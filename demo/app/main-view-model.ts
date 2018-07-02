@@ -51,6 +51,7 @@ export class HelloWorldModel extends Observable {
   private createBanner(size: AD_SIZE): void {
     const testing = true;
     createBanner({
+      testing: testing,
       // if this 'view' property is not set, the banner is overlayed on the current top most view
       // view: ..,
       size: size,
