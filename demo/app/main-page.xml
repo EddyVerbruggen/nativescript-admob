@@ -1,0 +1,27 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="page">
+
+  <Page.actionBar>
+    <ActionBar title="AdMob demo" icon="" class="action-bar">
+    </ActionBar>
+  </Page.actionBar>
+
+  <StackLayout class="p-20">
+    <Label text="{{ message }}" class="text-center m-b-10" textWrap="true"/>
+
+    <GridLayout columns="*, *" rows="auto, auto, auto, auto" horizontalAlignment="center">
+
+      <Button row="0" col="0" text="smart banner" tap="{{ doCreateSmartBanner }}"/>
+      <Button row="0" col="1" text="regular banner" tap="{{ doCreateRegularBanner }}"/>
+
+      <Button row="1" col="0" text="skyscraper" tap="{{ doCreateSkyscraperBanner }}"/>
+      <Button row="1" col="1" text="large banner" tap="{{ doCreateLargeBanner }}"/>
+
+      <Button row="2" col="0" text="rectangle" tap="{{ doCreateRectangularBanner }}"/>
+      <Button row="2" col="1" text="interstitial" tap="{{ doCreateInterstitial }}" class="btn-interstitial"/>
+
+      <Button row="3" col="0" text="leaderboard" tap="{{ doCreateLeaderboardBanner }}"/>
+      <Button row="3" col="1" text="hide banner" tap="{{ doHideBanner }}" class="btn-hide"/>
+    </GridLayout>
+
+  </StackLayout>
+</Page>

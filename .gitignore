@@ -1,2 +1,10 @@
-.idea
-.vscode
+.idea/
+.vscode/
+node_modules/
+.DS_Store
+
+demo/hooks
+demo/platforms
+demo/**/*.js
+
+src/platforms/android/*.aar

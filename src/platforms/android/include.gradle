@@ -1,0 +1,16 @@
+android {
+
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.google.com"
+    }
+    jcenter()
+}
+
+dependencies {
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '+'
+    compile "com.google.android.gms:play-services-ads:$googlePlayServicesVersion"
+}
