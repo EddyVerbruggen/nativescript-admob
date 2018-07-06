@@ -20,17 +20,17 @@ admob.defaults = {
   size: admob.AD_SIZE.SMART_BANNER
 };
 
-admob.merge = function merge(obj1, obj2){ // Our merge function
+admob.merge = function merge(obj1, obj2) { // Our merge function
   var result = {}; // return result
-  for(var i in obj1){      // for every property in obj1
-    if((i in obj2) && (typeof obj1[i] === "object") && (i !== null)){
-      result[i] = merge(obj1[i],obj2[i]); // if it's an object, merge
-    }else{
+  for (var i in obj1) {      // for every property in obj1
+    if ((i in obj2) && (typeof obj1[i] === "object") && (i !== null)) {
+      result[i] = merge(obj1[i], obj2[i]); // if it's an object, merge
+    } else {
       result[i] = obj1[i]; // add it to result
     }
   }
-  for(i in obj2){ // add the remaining properties from object 2
-    if(i in result){ //conflict
+  for (i in obj2) { // add the remaining properties from object 2
+    if (i in result) { //conflict
       continue;
     }
     result[i] = obj2[i];

@@ -1,6 +1,6 @@
 {
   "name": "nativescript-admob",
-  "version": "1.3.2",
+  "version": "1.4.2",
   "description": "Make money with your app by using Google's AdMob ads.",
   "main": "admob",
   "nativescript": {
@@ -8,6 +8,11 @@
       "android": "2.3.0",
       "ios": "2.3.0"
     }
+  },
+  "scripts": {
+    "demo.ios": "cd ../demo && tns plugin remove nativescript-admob && tns plugin add ../src && tns run ios",
+    "demo.android": "cd ../demo && tns run android",
+    "demo.android.release": "echo '*** Replace MY_PASSWORD ***' && cd ../demo && tns build android --release --for-device --key-store-path ../../xservices.keystore --key-store-password MY_PASSWORD --key-store-alias xservices --key-store-alias-password MY_PASSWORD && adb install ../demo/platforms/android/app/build/outputs/apk/release/app-release.apk"
   },
   "repository": {
     "type": "git",
@@ -27,10 +32,7 @@
     "name": "Eddy Verbruggen",
     "email": "eddyverbruggen@gmail.com"
   },
-  "license": {
-    "type": "MIT",
-    "url": "https://github.com/eddyverbruggen/nativescript-admob/blob/master/LICENSE"
-  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/eddyverbruggen/nativescript-admob/issues"
   },
