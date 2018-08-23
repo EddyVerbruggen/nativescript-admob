@@ -84,8 +84,10 @@ admob.createBanner = function (arg) {
         admob.adView.removeFromSuperview();
         admob.adView = null;
       }
-
-      admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      // If args doesn't have a view we add the advertisement to the view of the root ViewController.
+      if (arg.view === null || arg.view === undefined) {
+        admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      }
       var settings = admob.merge(arg, admob.defaults);
       var view = settings.view;
       var bannerType = admob._getBannerType(settings.size);
