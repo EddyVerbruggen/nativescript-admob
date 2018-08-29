@@ -1,6 +1,6 @@
 {
   "name": "nativescript-admob",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Make money with your app by using Google's AdMob ads.",
   "main": "admob",
   "nativescript": {
