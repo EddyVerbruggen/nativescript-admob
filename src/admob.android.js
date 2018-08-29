@@ -171,15 +171,19 @@ admob.createInterstitial = function (arg) {
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
-          admob.interstitialView.show();
+          if (admob.interstitialView) {
+            admob.interstitialView.show();
+          }
           resolve();
         },
         onAdFailedToLoad: function (errorCode) {
           reject(errorCode);
         },
         onAdClosed: function () {
-          admob.interstitialView.setAdListener(null);
-          admob.interstitialView = null;
+          if (admob.interstitialView) {
+            admob.interstitialView.setAdListener(null);
+            admob.interstitialView = null;
+          }
         }
       });
       admob.interstitialView.setAdListener(new InterstitialAdListener());
