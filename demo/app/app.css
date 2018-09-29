@@ -19,9 +19,9 @@ components that have the btn class name.
 Button {
   background-color: #3598db;
   color: #ffffff;
-  padding: 8 4;
-  margin: 8;
-  font-size: 14;
+  padding: 6 3;
+  margin: 6;
+  font-size: 13;
   border-radius: 4;
 }
 

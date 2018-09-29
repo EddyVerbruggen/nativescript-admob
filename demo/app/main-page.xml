@@ -5,10 +5,10 @@
     </ActionBar>
   </Page.actionBar>
 
-  <StackLayout class="p-20">
+  <StackLayout class="p-10">
     <Label text="{{ message }}" class="text-center m-b-10" textWrap="true"/>
 
-    <GridLayout columns="*, *" rows="auto, auto, auto, auto" horizontalAlignment="center">
+    <GridLayout columns="*, *" rows="auto, auto, auto, auto, auto, auto" horizontalAlignment="center">
 
       <Button row="0" col="0" text="smart banner" tap="{{ doCreateSmartBanner }}"/>
       <Button row="0" col="1" text="regular banner" tap="{{ doCreateRegularBanner }}"/>
@@ -17,10 +17,14 @@
       <Button row="1" col="1" text="large banner" tap="{{ doCreateLargeBanner }}"/>
 
       <Button row="2" col="0" text="rectangle" tap="{{ doCreateRectangularBanner }}"/>
-      <Button row="2" col="1" text="interstitial" tap="{{ doCreateInterstitial }}" class="btn-interstitial"/>
+      <Button row="2" col="1" text="leaderboard" tap="{{ doCreateLeaderboardBanner }}"/>
 
-      <Button row="3" col="0" text="leaderboard" tap="{{ doCreateLeaderboardBanner }}"/>
-      <Button row="3" col="1" text="hide banner" tap="{{ doHideBanner }}" class="btn-hide"/>
+      <Button row="3" col="0" text="preload inter." tap="{{ doPreloadInterstitial }}" class="btn-interstitial"/>
+      <Button row="3" col="1" text="show interstitial" tap="{{ doShowInterstitial }}" class="btn-interstitial"/>
+
+      <Button row="4" colSpan="2" text="create and show interstitial" tap="{{ doCreateInterstitial }}" class="btn-interstitial"/>
+
+      <Button row="5" colSpan="2" text="hide banner" tap="{{ doHideBanner }}" class="btn-hide"/>
     </GridLayout>
 
   </StackLayout>

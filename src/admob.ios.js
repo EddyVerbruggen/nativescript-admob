@@ -43,28 +43,33 @@ admob._getBannerType = function (size) {
   // console.log("kGADAdSizeSmartBannerLandscape: " + JSON.stringify(kGADAdSizeSmartBannerLandscape));
   // console.log("kGADAdSizeInvalid: " + JSON.stringify(kGADAdSizeInvalid));
 
-  if (size == admob.AD_SIZE.BANNER) {
+  console.log(UIDeviceOrientation.UIDeviceOrientationPortrait);
+  console.log(typeof(UIDeviceOrientation.UIDeviceOrientationPortrait));
+
+  if (size === admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
     return {"size": {"width": 320, "height": 50}, "flags": 0};
-  } else if (size == admob.AD_SIZE.LARGE_BANNER) {
+  } else if (size === admob.AD_SIZE.LARGE_BANNER) {
     // return kGADAdSizeLargeBanner;
     return {"size": {"width": 320, "height": 100}, "flags": 0};
-  } else if (size == admob.AD_SIZE.MEDIUM_RECTANGLE) {
+  } else if (size === admob.AD_SIZE.MEDIUM_RECTANGLE) {
     // return kGADAdSizeMediumRectangle;
     return {"size": {"width": 300, "height": 250}, "flags": 0};
-  } else if (size == admob.AD_SIZE.FULL_BANNER) {
+  } else if (size === admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
     return {"size": {"width": 468, "height": 60}, "flags": 0};
-  } else if (size == admob.AD_SIZE.LEADERBOARD) {
+  } else if (size === admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
     return {"size": {"width": 728, "height": 90}, "flags": 0};
-  } else if (size == admob.AD_SIZE.SKYSCRAPER) {
+  } else if (size === admob.AD_SIZE.SKYSCRAPER) {
     // return kGADAdSizeSkyscraper;
     return {"size": {"width": 120, "height": 600}, "flags": 0};
-  } else if (size == admob.AD_SIZE.SMART_BANNER || size == admob.AD_SIZE.FLUID) {
+  } else if (size === admob.AD_SIZE.SMART_BANNER || size === admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = device.deviceType === DeviceType.Tablet;
-    if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
+    console.log(orientation);
+    console.log(typeof(orientation));
+    if (orientation === UIDeviceOrientation.UIDeviceOrientationPortrait || orientation === UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
@@ -144,7 +149,7 @@ admob.createBanner = function (arg) {
   });
 };
 
-admob.createInterstitial = function (arg) {
+admob.preloadInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var settings = admob.merge(arg, admob.defaults);
@@ -155,8 +160,7 @@ admob.createInterstitial = function (arg) {
         if (error) {
           reject(error);
         } else {
-          // now we can safely show it
-          admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+          // now we can safely show it, but leave that to the calling code
           resolve();
         }
         delegate = undefined;
@@ -175,9 +179,34 @@ admob.createInterstitial = function (arg) {
 
       admob.interstitialView.loadRequest(adRequest);
     } catch (ex) {
-      console.log("Error in admob.interstitialView: " + ex);
+      console.log("Error in admob.preloadInterstitial: " + ex);
       reject(ex);
     }
+  });
+};
+
+admob.showInterstitial = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.interstitialView) {
+        admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+        resolve();
+      } else {
+        reject("Please call 'preloadInterstitial' first.");
+      }
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
+
+admob.createInterstitial = function (arg) {
+  return new Promise(function (resolve, reject) {
+    admob.preloadInterstitial(arg)
+        .then(function () {
+          admob.showInterstitial().then(resolve);
+        })
+        .catch(reject);
   });
 };
 

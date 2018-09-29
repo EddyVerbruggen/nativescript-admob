@@ -1,5 +1,12 @@
 import { Observable } from "tns-core-modules/data/observable";
-import { AD_SIZE, createBanner, createInterstitial, hideBanner } from "nativescript-admob";
+import {
+  AD_SIZE,
+  createBanner,
+  createInterstitial,
+  hideBanner,
+  preloadInterstitial,
+  showInterstitial
+} from "nativescript-admob";
 import { isIOS } from "tns-core-modules/platform";
 
 export class HelloWorldModel extends Observable {
@@ -22,6 +29,36 @@ export class HelloWorldModel extends Observable {
         () => this.message = "Banner hidden",
         error => this.message = "Error hiding banner: " + error
     );
+  }
+
+
+  doPreloadInterstitial(): void {
+    preloadInterstitial({
+      testing: true,
+      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122"
+    }).then(
+        () => this.message = "Interstitial preloaded",
+        error => this.message = "Error preloading interstitial: " + error
+    )
+  }
+
+  doShowInterstitial(): void {
+    showInterstitial().then(
+        () => this.message = "Interstitial showing",
+        error => this.message = "Error showing interstitial: " + error
+    )
+  }
+
+  doCreateInterstitial(): void {
+    createInterstitial({
+      testing: true,
+      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122"
+    }).then(
+        () => this.message = "Interstitial created",
+        error => this.message = "Error creating interstitial: " + error
+    )
   }
 
   doCreateSmartBanner(): void {
@@ -70,18 +107,6 @@ export class HelloWorldModel extends Observable {
     }).then(
         () => this.message = "Banner created",
         error => this.message = "Error creating banner: " + error
-    )
-  }
-
-  private doCreateInterstitial(size: AD_SIZE): void {
-    const testing = true;
-    createInterstitial({
-      testing: true,
-      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122"
-    }).then(
-        () => this.message = "Interstitial created",
-        error => this.message = "Error creating interstitial: " + error
     )
   }
 }
