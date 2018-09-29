@@ -161,7 +161,7 @@ admob.createBanner = function (arg) {
   });
 };
 
-admob.createInterstitial = function (arg) {
+admob.preloadInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var settings = admob.merge(arg, admob.defaults);
@@ -171,15 +171,15 @@ admob.createInterstitial = function (arg) {
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
-          if (admob.interstitialView) {
-            admob.interstitialView.show();
-          }
+          console.log("onAdLoaded");
           resolve();
         },
         onAdFailedToLoad: function (errorCode) {
+          console.log("onAdFailedToLoad: " + errorCode);
           reject(errorCode);
         },
         onAdClosed: function () {
+          console.log("onAdClosed");
           if (admob.interstitialView) {
             admob.interstitialView.setAdListener(null);
             admob.interstitialView = null;
@@ -191,9 +191,35 @@ admob.createInterstitial = function (arg) {
       var ad = admob._buildAdRequest(settings);
       admob.interstitialView.loadAd(ad);
     } catch (ex) {
-      console.log("Error in admob.createBanner: " + ex);
+      console.log("Error in admob.preloadInterstitial: " + ex);
       reject(ex);
     }
+  });
+};
+
+admob.showInterstitial = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.interstitialView) {
+        admob.interstitialView.show();
+        resolve();
+      } else {
+        reject("Please call 'preloadInterstitial' first.");
+      }
+    } catch (ex) {
+      console.log("Error in admob.showInterstitial: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+admob.createInterstitial = function (arg) {
+  return new Promise(function (resolve, reject) {
+    admob.preloadInterstitial(arg)
+        .then(function () {
+          admob.showInterstitial().then(resolve);
+        })
+        .catch(reject);
   });
 };
 
