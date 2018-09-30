@@ -1,3 +1,4 @@
 .idea
 .vscode
+references.d.ts
 platforms/android/AndroidManifest.xml
