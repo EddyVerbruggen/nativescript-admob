@@ -133,7 +133,7 @@ admob.createInterstitial({
 ```
 
 ### preloadInterstitial
-Use this for instance `showInterstitial` while loading your view, so it's ready for the moment you want to actually show it (by calling `showInterstitial`).
+Use this for instance while loading your view, so it's ready for the moment you want to actually show it (by calling `showInterstitial`).
 
 Note that the parameters are identical to `createInterstitial`.
 
