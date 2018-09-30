@@ -19,10 +19,10 @@
       <Button row="2" col="0" text="rectangle" tap="{{ doCreateRectangularBanner }}"/>
       <Button row="2" col="1" text="leaderboard" tap="{{ doCreateLeaderboardBanner }}"/>
 
-      <Button row="3" col="0" text="preload inter." tap="{{ doPreloadInterstitial }}" class="btn-interstitial"/>
-      <Button row="3" col="1" text="show interstitial" tap="{{ doShowInterstitial }}" class="btn-interstitial"/>
+      <Button row="3" col="0" text="preload inter." tap="{{ doPreloadInterstitial }}"/>
+      <Button row="3" col="1" text="show interstitial" tap="{{ doShowInterstitial }}"/>
 
-      <Button row="4" colSpan="2" text="create and show interstitial" tap="{{ doCreateInterstitial }}" class="btn-interstitial"/>
+      <Button row="4" colSpan="2" text="create and show interstitial" tap="{{ doCreateInterstitial }}" class="btn-interstitial-deprecated"/>
 
       <Button row="5" colSpan="2" text="hide banner" tap="{{ doHideBanner }}" class="btn-hide"/>
     </GridLayout>

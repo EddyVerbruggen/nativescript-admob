@@ -29,6 +29,7 @@ Button.btn-hide {
   background-color: #db3015;
 }
 
-Button.btn-interstitial {
-  background-color: #808080;
+Button.btn-interstitial-deprecated {
+  color: #ddd;
+  background-color: #a0a0a0;
 }
