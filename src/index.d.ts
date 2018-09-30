@@ -111,14 +111,15 @@ declare module "nativescript-admob" {
     /**
      * To show a fullscreen banner you can use this function.
      * Note that Interstitial banners need to be loaded before they can be shown,
-     * so use this function, and when the promise resolves you can use showInterstitial.
+     * so use this function, and when the promise resolves you can call 'showInterstitial'.
      * If you don't want to use 2 steps, use createInterstitial instead, but there will be a (preloading) delay
      * which is not recommended.
      */
     export function preloadInterstitial(options: CreateInterstitialOptions): Promise<any>;
 
     /**
-     * Use after the 'preloadInterstitial' promise has resolved.
+     * Use after the 'preloadInterstitial' promise has resolved. It should immediately show the interstitial,
+     * as opposed to the delay you'd see when using 'createInterstitial'.
      */
     export function showInterstitial(): Promise<any>;
 
@@ -128,6 +129,7 @@ declare module "nativescript-admob" {
      * To show a fullscreen banner you can use this function.
      * Note that Interstitial banners need to be loaded before they can be shown,
      * but don't worry: this plugin will manage that transparently for you.
+     * However, Google won't like it too much, because there will be a delay.
      */
     export function createInterstitial(options: CreateInterstitialOptions): Promise<any>;
 }
