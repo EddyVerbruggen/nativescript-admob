@@ -1,6 +1,6 @@
-var utils = require("utils/utils");
-var application = require("application");
-var frame = require("ui/frame");
+var utils = require("tns-core-modules/utils/utils");
+var application = require("tns-core-modules/application");
+var frame = require("tns-core-modules/ui/frame");
 var admob = require("./admob-common");
 
 admob._getBannerType = function (size) {
