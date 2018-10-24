@@ -16,6 +16,20 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-admob
 ```
 
+### Android
+> ⚠️ Important! Plugin version 3.0.0+ requires you to do this! ⚠️
+
+Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data` line at [the right spot]() (and replace the value!):
+
+```xml
+<application>
+  <!-- this line needs to be added (replace the value!) -->
+  <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713" />
+
+  <activity></activity>
+</application>
+```
+
 ### iOS
 Run `pod repo update` from a Terminal, otherwise the required Pod version may not be available on your system.
 
