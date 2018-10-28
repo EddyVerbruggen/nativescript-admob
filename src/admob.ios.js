@@ -14,12 +14,16 @@ var GADBannerViewDelegateImpl = (function (_super) {
   GADBannerViewDelegateImpl.new = function () {
     return _super.new.call(this);
   };
-  GADBannerViewDelegateImpl.prototype.initWithCallback = function (callback) {
+  GADBannerViewDelegateImpl.prototype.initWithCallbackAndOnAdCloseCallback = function (callback, onAdCloseCallback) {
     this._callback = callback;
+    this._onAdCloseCallback = onAdCloseCallback;
     return this;
   };
   GADBannerViewDelegateImpl.prototype.interstitialDidReceiveAd = function (ad) {
     this._callback(ad);
+  };
+  GADBannerViewDelegateImpl.prototype.interstitialDidDismissScreen = function (ad) {
+    this._onAdCloseCallback();
   };
   GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
     this._callback(ad, error);
@@ -156,15 +160,20 @@ admob.preloadInterstitial = function (arg) {
       admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
 
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
-      var delegate = GADBannerViewDelegateImpl.new().initWithCallback(function (ad, error) {
-        if (error) {
-          reject(error);
-        } else {
-          // now we can safely show it, but leave that to the calling code
-          resolve();
-        }
-        delegate = undefined;
-      });
+      var delegate = GADBannerViewDelegateImpl.new().initWithCallbackAndOnAdCloseCallback(
+          function (ad, error) {
+            if (error) {
+              reject(error);
+            } else {
+              // now we can safely show it, but leave that to the calling code
+              resolve();
+            }
+            delegate = undefined;
+          },
+          function () {
+            arg.onAdClosed && arg.onAdClosed();
+          });
+
       admob.interstitialView.delegate = delegate;
 
       var adRequest = GADRequest.request();

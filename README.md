@@ -125,6 +125,8 @@ they can be shown, and there are two ways to do that:
 * Use `createInterstitial` and have the plugin automatically preload the ad and show it when loaded. This is not recommended because there's a delay the user may notice.
 * (Since plugin version 2.0.0) Use `preloadInterstitial`, and (at any time after its Promise resolves) `showInterstitial`. This will hide the preloading delay for your users. Note that the parameters of `createInterstitial` and `preloadInterstitial` are exactly the same so migration should be easy. 
 
+If you want to get notified when an interstitial is closed, provide an `onAdClosed` callback as shown below.
+
 ### createInterstitial
 Again, not recommended.
 
@@ -135,7 +137,8 @@ admob.createInterstitial({
     androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
     // Android automatically adds the connected device as test device with testing:true, iOS does not
     iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"],
-    keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+    onAdClosed: function () { console.log("interstitial closed") }
   }).then(
       function() {
         console.log("admob createInterstitial done");
@@ -158,7 +161,8 @@ admob.preloadInterstitial({
     androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
     // Android automatically adds the connected device as test device with testing:true, iOS does not
     iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"],
-    keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+    onAdClosed: function () { console.log("interstitial closed") }
   }).then(
       function() {
         console.log("interstitial preloaded - you can now call 'showInterstitial' whenever you're ready to do so");

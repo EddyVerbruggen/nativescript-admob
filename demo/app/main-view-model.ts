@@ -36,7 +36,8 @@ export class HelloWorldModel extends Observable {
     preloadInterstitial({
       testing: true,
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122"
+      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      onAdClosed: () => this.message = "Interstitial closed"
     }).then(
         () => this.message = "Interstitial preloaded",
         error => this.message = "Error preloading interstitial: " + error
@@ -54,7 +55,8 @@ export class HelloWorldModel extends Observable {
     createInterstitial({
       testing: true,
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122"
+      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      onAdClosed: () => this.message = "Interstitial closed"
     }).then(
         () => this.message = "Interstitial created",
         error => this.message = "Error creating interstitial: " + error

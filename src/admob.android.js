@@ -179,11 +179,11 @@ admob.preloadInterstitial = function (arg) {
           reject(errorCode);
         },
         onAdClosed: function () {
-          console.log("onAdClosed");
           if (admob.interstitialView) {
             admob.interstitialView.setAdListener(null);
             admob.interstitialView = null;
           }
+          arg.onAdClosed && arg.onAdClosed();
         }
       });
       admob.interstitialView.setAdListener(new InterstitialAdListener());

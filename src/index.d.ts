@@ -95,6 +95,11 @@ declare module "nativescript-admob" {
        * Specify keywords for ad targeting
        */
       keywords?: string[];
+
+      /**
+       * Invoked when the user closes the interstitial.
+       */
+      onAdClosed?: () => void;
     }
 
     /**
