@@ -17,9 +17,9 @@ tns plugin add nativescript-admob
 ```
 
 ### Android
-> ⚠️ Important! Plugin version 3.0.0+ requires you to do this! ⚠️
+> ⚠️ Important! Plugin version 3.0.0+ requires you to do this - or your app will crash on start-up! ⚠️
 
-Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data` line at [the right spot](https://github.com/EddyVerbruggen/nativescript-admob/blob/6bfa83c303023d0e8072148dcb45b8befb9cd0aa/demo/app/App_Resources/Android/src/main/AndroidManifest.xml#L28) (and replace the value!):
+Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data` line at [the right spot](https://github.com/EddyVerbruggen/nativescript-admob/blob/6bfa83c303023d0e8072148dcb45b8befb9cd0aa/demo/app/App_Resources/Android/src/main/AndroidManifest.xml#L28) (and replace the value by the actual App ID of [your app](https://apps.admob.com/)!):
 
 ```xml
 <application>
