@@ -1,8 +1,8 @@
 var admob = require("./admob-common");
-var application = require("application");
-var utils = require("utils/utils");
-var device = require("platform").device;
-var DeviceType = require("ui/enums").DeviceType;
+var application = require("tns-core-modules/application");
+var utils = require("tns-core-modules/utils/utils");
+var device = require("tns-core-modules/platform").device;
+var DeviceType = require("tns-core-modules/ui/enums").DeviceType;
 
 var GADBannerViewDelegateImpl = (function (_super) {
   __extends(GADBannerViewDelegateImpl, _super);
@@ -73,7 +73,7 @@ admob._getBannerType = function (size) {
     var isIPad = device.deviceType === DeviceType.Tablet;
     console.log(orientation);
     console.log(typeof(orientation));
-    if (orientation === UIDeviceOrientation.UIDeviceOrientationPortrait || orientation === UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
+    if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
@@ -116,7 +116,7 @@ admob.createBanner = function (arg) {
       var adRequest = GADRequest.request();
 
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
+        var testDevices = ["Simulator"];
         if (settings.iosTestDeviceIds) {
           testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }
@@ -179,7 +179,7 @@ admob.preloadInterstitial = function (arg) {
       var adRequest = GADRequest.request();
 
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
+        var testDevices = ["Simulator"];
         if (settings.iosTestDeviceIds) {
           testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }

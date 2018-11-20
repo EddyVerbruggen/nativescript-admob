@@ -38,7 +38,7 @@ declare class DFPBannerView extends GADBannerView {
 
   enableManualImpressions: boolean;
 
-  validAdSizes: NSArray<NSValue>;
+  validAdSizes: NSArray<any>;
 
   readonly videoController: GADVideoController;
 
@@ -46,7 +46,7 @@ declare class DFPBannerView extends GADBannerView {
 
   resize(size: GADAdSize): void;
 
-  setAdOptions(adOptions: NSArray<GADAdLoaderOptions>): void;
+  setAdOptions(adOptions: NSArray<any>): void;
 
   setValidAdSizesWithSizes(firstSize: interop.Pointer | interop.Reference<GADAdSize>): void;
 }
@@ -878,13 +878,15 @@ interface GADMAdNetworkAdapter extends NSObjectProtocol {
 
   getInterstitial(): void;
 
-  getNativeAdWithAdTypesOptions?(adTypes: NSArray<string>, options: NSArray<GADAdLoaderOptions>): void;
+  getNativeAdWithAdTypesOptions?(adTypes: NSArray<any>, options: NSArray<any>): void;
 
   handlesUserClicks?(): boolean;
 
   handlesUserImpressions?(): boolean;
 
   initWithGADMAdNetworkConnector?(connector: GADMAdNetworkConnector): GADMAdNetworkAdapter;
+
+  isBannerAnimationOK(animType: GADMBannerAnimationType): boolean;
 
   presentInterstitialFromRootViewController(rootViewController: UIViewController): void;
 
@@ -1024,14 +1026,6 @@ declare var GADMRewardBasedVideoAdNetworkConnector: {
 
   prototype: GADMRewardBasedVideoAdNetworkConnector;
 };
-
-declare var GADMaxAdContentRatingGeneral: string;
-
-declare var GADMaxAdContentRatingMatureAudience: string;
-
-declare var GADMaxAdContentRatingParentalGuidance: string;
-
-declare var GADMaxAdContentRatingTeen: string;
 
 declare class GADMediaView extends UIView {
 
@@ -1236,15 +1230,11 @@ interface GADMediationAdRequest extends NSObjectProtocol {
 
   credentials(): NSDictionary<any, any>;
 
-  maxAdContentRating(): string;
-
   networkExtras(): GADAdNetworkExtras;
 
   publisherId(): string;
 
   testMode(): boolean;
-
-  underAgeOfConsent(): number;
 
   userBirthday(): Date;
 
@@ -1288,8 +1278,6 @@ declare class GADMobileAds extends NSObject {
 
   readonly audioVideoManager: GADAudioVideoManager;
 
-  readonly requestConfiguration: GADRequestConfiguration;
-
   isSDKVersionAtLeastMajorMinorPatch(major: number, minor: number, patch: number): boolean;
 }
 
@@ -1300,15 +1288,6 @@ declare class GADMultipleAdsAdLoaderOptions extends GADAdLoaderOptions {
   static new(): GADMultipleAdsAdLoaderOptions; // inherited from NSObject
 
   numberOfAds: number;
-}
-
-declare class GADMuteThisAdReason extends NSObject {
-
-  static alloc(): GADMuteThisAdReason; // inherited from NSObject
-
-  static new(): GADMuteThisAdReason; // inherited from NSObject
-
-  readonly reasonDescription: string;
 }
 
 declare class GADNativeAd extends NSObject {
@@ -1708,15 +1687,6 @@ declare var GADNativeExpressAdViewDelegate: {
   prototype: GADNativeExpressAdViewDelegate;
 };
 
-declare class GADNativeMuteThisAdLoaderOptions extends GADAdLoaderOptions {
-
-  static alloc(): GADNativeMuteThisAdLoaderOptions; // inherited from NSObject
-
-  static new(): GADNativeMuteThisAdLoaderOptions; // inherited from NSObject
-
-  customMuteThisAdRequested: boolean;
-}
-
 declare class GADRequest extends NSObject implements NSCopying {
 
   static alloc(): GADRequest; // inherited from NSObject
@@ -1756,17 +1726,6 @@ declare class GADRequest extends NSObject implements NSCopying {
   tagForChildDirectedTreatment(childDirectedTreatment: boolean): void;
 }
 
-declare class GADRequestConfiguration extends NSObject {
-
-  static alloc(): GADRequestConfiguration; // inherited from NSObject
-
-  static new(): GADRequestConfiguration; // inherited from NSObject
-
-  maxAdContentRating: string;
-
-  tagForUnderAgeOfConsent(underAgeOfConsent: boolean): void;
-}
-
 declare class GADRequestError extends NSError {
 
   static alloc(): GADRequestError; // inherited from NSObject
@@ -1789,8 +1748,6 @@ declare class GADRewardBasedVideoAd extends NSObject {
   static sharedInstance(): GADRewardBasedVideoAd;
 
   readonly adNetworkClassName: string;
-
-  customRewardString: string;
 
   delegate: GADRewardBasedVideoAdDelegate;
 
@@ -1921,8 +1878,6 @@ declare class GADUnifiedNativeAd extends NSObject {
 
   readonly callToAction: string;
 
-  readonly customMuteThisAdAvailable: boolean;
-
   delegate: GADUnifiedNativeAdDelegate;
 
   readonly extraAssets: NSDictionary<string, any>;
@@ -1932,8 +1887,6 @@ declare class GADUnifiedNativeAd extends NSObject {
   readonly icon: GADNativeAdImage;
 
   readonly images: NSArray<GADNativeAdImage>;
-
-  readonly muteThisAdReasons: NSArray<GADMuteThisAdReason>;
 
   readonly price: string;
 
@@ -1948,12 +1901,6 @@ declare class GADUnifiedNativeAd extends NSObject {
   readonly videoController: GADVideoController;
 
   cancelUnconfirmedClick(): void;
-
-  enableCustomClickGestures(): void;
-
-  muteThisAdWithReason(reason: GADMuteThisAdReason): void;
-
-  recordCustomClickGesture(): void;
 
   registerAdViewClickableAssetViewsNonclickableAssetViews(adView: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>): void;
 
@@ -1971,8 +1918,6 @@ interface GADUnifiedNativeAdDelegate extends NSObjectProtocol {
   nativeAdDidRecordClick?(nativeAd: GADUnifiedNativeAd): void;
 
   nativeAdDidRecordImpression?(nativeAd: GADUnifiedNativeAd): void;
-
-  nativeAdIsMuted?(nativeAd: GADUnifiedNativeAd): void;
 
   nativeAdWillDismissScreen?(nativeAd: GADUnifiedNativeAd): void;
 
