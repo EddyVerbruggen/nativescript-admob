@@ -1,0 +1,19 @@
+{
+  "name": "nativescript-admob",
+  "version": "1.0.0",
+  "description": "Nativescript admob fork",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JillevdW/nativescript-admob.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JillevdW/nativescript-admob/issues"
+  },
+  "homepage": "https://github.com/JillevdW/nativescript-admob#readme"
+}
