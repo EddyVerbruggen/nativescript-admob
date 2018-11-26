@@ -1,8 +1,8 @@
 var admob = require("./admob-common");
-var application = require("application");
-var utils = require("utils/utils");
-var device = require("platform").device;
-var DeviceType = require("ui/enums").DeviceType;
+var application = require("tns-core-modules/application");
+var utils = require("tns-core-modules/utils/utils");
+var device = require("tns-core-modules/platform").device;
+var DeviceType = require("tns-core-modules/ui/enums").DeviceType;
 
 var GADBannerViewDelegateImpl = (function (_super) {
   __extends(GADBannerViewDelegateImpl, _super);
@@ -14,12 +14,16 @@ var GADBannerViewDelegateImpl = (function (_super) {
   GADBannerViewDelegateImpl.new = function () {
     return _super.new.call(this);
   };
-  GADBannerViewDelegateImpl.prototype.initWithCallback = function (callback) {
+  GADBannerViewDelegateImpl.prototype.initWithCallbackAndOnAdCloseCallback = function (callback, onAdCloseCallback) {
     this._callback = callback;
+    this._onAdCloseCallback = onAdCloseCallback;
     return this;
   };
   GADBannerViewDelegateImpl.prototype.interstitialDidReceiveAd = function (ad) {
     this._callback(ad);
+  };
+  GADBannerViewDelegateImpl.prototype.interstitialDidDismissScreen = function (ad) {
+    this._onAdCloseCallback();
   };
   GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
     this._callback(ad, error);
@@ -43,28 +47,33 @@ admob._getBannerType = function (size) {
   // console.log("kGADAdSizeSmartBannerLandscape: " + JSON.stringify(kGADAdSizeSmartBannerLandscape));
   // console.log("kGADAdSizeInvalid: " + JSON.stringify(kGADAdSizeInvalid));
 
-  if (size == admob.AD_SIZE.BANNER) {
+  console.log(UIDeviceOrientation.UIDeviceOrientationPortrait);
+  console.log(typeof(UIDeviceOrientation.UIDeviceOrientationPortrait));
+
+  if (size === admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
     return {"size": {"width": 320, "height": 50}, "flags": 0};
-  } else if (size == admob.AD_SIZE.LARGE_BANNER) {
+  } else if (size === admob.AD_SIZE.LARGE_BANNER) {
     // return kGADAdSizeLargeBanner;
     return {"size": {"width": 320, "height": 100}, "flags": 0};
-  } else if (size == admob.AD_SIZE.MEDIUM_RECTANGLE) {
+  } else if (size === admob.AD_SIZE.MEDIUM_RECTANGLE) {
     // return kGADAdSizeMediumRectangle;
     return {"size": {"width": 300, "height": 250}, "flags": 0};
-  } else if (size == admob.AD_SIZE.FULL_BANNER) {
+  } else if (size === admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
     return {"size": {"width": 468, "height": 60}, "flags": 0};
-  } else if (size == admob.AD_SIZE.LEADERBOARD) {
+  } else if (size === admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
     return {"size": {"width": 728, "height": 90}, "flags": 0};
-  } else if (size == admob.AD_SIZE.SKYSCRAPER) {
+  } else if (size === admob.AD_SIZE.SKYSCRAPER) {
     // return kGADAdSizeSkyscraper;
     return {"size": {"width": 120, "height": 600}, "flags": 0};
-  } else if (size == admob.AD_SIZE.SMART_BANNER || size == admob.AD_SIZE.FLUID) {
+  } else if (size === admob.AD_SIZE.SMART_BANNER || size === admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = device.deviceType === DeviceType.Tablet;
-    if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
+    console.log(orientation);
+    console.log(typeof(orientation));
+    if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
@@ -105,7 +114,7 @@ admob.createBanner = function (arg) {
       var adRequest = GADRequest.request();
 
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
+        var testDevices = ["Simulator"];
         if (settings.iosTestDeviceIds) {
           testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }
@@ -142,29 +151,33 @@ admob.createBanner = function (arg) {
   });
 };
 
-admob.createInterstitial = function (arg) {
+admob.preloadInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var settings = admob.merge(arg, admob.defaults);
       admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
 
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
-      var delegate = GADBannerViewDelegateImpl.new().initWithCallback(function (ad, error) {
-        if (error) {
-          reject(error);
-        } else {
-          // now we can safely show it
-          admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
-          resolve();
-        }
-        delegate = undefined;
-      });
+      var delegate = GADBannerViewDelegateImpl.new().initWithCallbackAndOnAdCloseCallback(
+          function (ad, error) {
+            if (error) {
+              reject(error);
+            } else {
+              // now we can safely show it, but leave that to the calling code
+              resolve();
+            }
+            delegate = undefined;
+          },
+          function () {
+            arg.onAdClosed && arg.onAdClosed();
+          });
+
       admob.interstitialView.delegate = delegate;
 
       var adRequest = GADRequest.request();
 
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
+        var testDevices = ["Simulator"];
         if (settings.iosTestDeviceIds) {
           testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }
@@ -173,9 +186,34 @@ admob.createInterstitial = function (arg) {
 
       admob.interstitialView.loadRequest(adRequest);
     } catch (ex) {
-      console.log("Error in admob.interstitialView: " + ex);
+      console.log("Error in admob.preloadInterstitial: " + ex);
       reject(ex);
     }
+  });
+};
+
+admob.showInterstitial = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.interstitialView) {
+        admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+        resolve();
+      } else {
+        reject("Please call 'preloadInterstitial' first.");
+      }
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
+
+admob.createInterstitial = function (arg) {
+  return new Promise(function (resolve, reject) {
+    admob.preloadInterstitial(arg)
+        .then(function () {
+          admob.showInterstitial().then(resolve);
+        })
+        .catch(reject);
   });
 };
 

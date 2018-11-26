@@ -16,10 +16,24 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-admob
 ```
 
+### Android
+> ⚠️ Important! Plugin version 3.0.0+ requires you to do this - or your app will crash on start-up! ⚠️
+
+Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data` line at [the right spot](https://github.com/EddyVerbruggen/nativescript-admob/blob/6bfa83c303023d0e8072148dcb45b8befb9cd0aa/demo/app/App_Resources/Android/src/main/AndroidManifest.xml#L28) (and replace the value by the actual App ID of [your app](https://apps.admob.com/)!):
+
+```xml
+<application>
+  <!-- this line needs to be added (replace the value!) -->
+  <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713" />
+
+  <activity></activity>
+</application>
+```
+
 ### iOS
 Run `pod repo update` from a Terminal, otherwise the required Pod version may not be available on your system.
 
-## Usage
+## BANNER
 
 If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-admob-demo).
 
@@ -104,9 +118,17 @@ admob.hideBanner().then(
 )
 ```
 
+## INTERSTITIAL
+To show a fullscreen ad, you can use this function. Note that Interstitial banners need to be loaded before
+they can be shown, and there are two ways to do that:
+
+* Use `createInterstitial` and have the plugin automatically preload the ad and show it when loaded. This is not recommended because there's a delay the user may notice.
+* (Since plugin version 2.0.0) Use `preloadInterstitial`, and (at any time after its Promise resolves) `showInterstitial`. This will hide the preloading delay for your users. Note that the parameters of `createInterstitial` and `preloadInterstitial` are exactly the same so migration should be easy. 
+
+If you want to get notified when an interstitial is closed, provide an `onAdClosed` callback as shown below.
+
 ### createInterstitial
-To show a fullscreen banner you can use this function. Note that Interstitial banners need to be loaded before
-they can be shown, but don't worry: this plugin will manage that transparently for you.
+Again, not recommended.
 
 ```js
 admob.createInterstitial({
@@ -115,7 +137,8 @@ admob.createInterstitial({
     androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
     // Android automatically adds the connected device as test device with testing:true, iOS does not
     iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"],
-    keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+    onAdClosed: function () { console.log("interstitial closed") }
   }).then(
       function() {
         console.log("admob createInterstitial done");
@@ -126,9 +149,49 @@ admob.createInterstitial({
 )
 ```
 
-## Tutorials
+### preloadInterstitial
+Use this for instance while loading your view, so it's ready for the moment you want to actually show it (by calling `showInterstitial`).
 
-Need a little more help getting started?  Check out these tutorials for using Admob in a NativeScript Android and iOS application.
+Note that the parameters are identical to `createInterstitial`.
+
+```js
+admob.preloadInterstitial({
+    testing: true,
+    iosInterstitialId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
+    androidInterstitialId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
+    // Android automatically adds the connected device as test device with testing:true, iOS does not
+    iosTestDeviceIds: ["ce97330130c9047ce0d4430d37d713b2"],
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+    onAdClosed: function () { console.log("interstitial closed") }
+  }).then(
+      function() {
+        console.log("interstitial preloaded - you can now call 'showInterstitial' whenever you're ready to do so");
+      },
+      function(error) {
+        console.log("admob preloadInterstitial error: " + error);
+      }
+)
+```
+
+### showInterstitial
+At any moment after `preloadInterstitial` successfully resolves, you can call `showInterstitial`.
+
+Note that when you want to use `showInterstitial` again, you also have to use `preloadInterstitial` again because those ads can't be reused. 
+
+```js
+admob.showInterstitial().then(
+      function() {
+        // this will resolve almost immediately, and the interstitial is shown without a delay because it was already loaded
+        console.log("interstitial showing");
+      },
+      function(error) {
+        console.log("admob showInterstitial error: " + error);
+      }
+)
+```
+
+## Tutorials
+Need a little more help getting started? Check out these tutorials for using Admob in a NativeScript Android and iOS application.
 
 * [Monetize with Google Admob in a NativeScript Vanilla Application](https://www.thepolyglotdeveloper.com/2016/03/monetize-with-google-admob-in-a-nativescript-mobile-app/)
 * [Monetize with Google Admob in a NativeScript Angular Application](https://www.thepolyglotdeveloper.com/2016/11/google-admob-nativescript-angular-2/)

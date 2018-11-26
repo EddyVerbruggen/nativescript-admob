@@ -1,4 +1,6 @@
 /// <reference path="admob-common.d.ts"/>
+import { preloadInterstitial } from "nativescript-admob";
+
 declare module "nativescript-admob" {
 
     /**
@@ -44,7 +46,7 @@ declare module "nativescript-admob" {
        * The number of pixels from the top/bottom of the view antural
        * position of this banner size (type).
        * The plugin corrects for display density, so don't worry about that.
-       * 
+       *
        * If both are set, top wins.
        */
       margins?: {
@@ -93,6 +95,11 @@ declare module "nativescript-admob" {
        * Specify keywords for ad targeting
        */
       keywords?: string[];
+
+      /**
+       * Invoked when the user closes the interstitial.
+       */
+      onAdClosed?: () => void;
     }
 
     /**
@@ -109,7 +116,25 @@ declare module "nativescript-admob" {
     /**
      * To show a fullscreen banner you can use this function.
      * Note that Interstitial banners need to be loaded before they can be shown,
+     * so use this function, and when the promise resolves you can call 'showInterstitial'.
+     * If you don't want to use 2 steps, use createInterstitial instead, but there will be a (preloading) delay
+     * which is not recommended.
+     */
+    export function preloadInterstitial(options: CreateInterstitialOptions): Promise<any>;
+
+    /**
+     * Use after the 'preloadInterstitial' promise has resolved. It should immediately show the interstitial,
+     * as opposed to the delay you'd see when using 'createInterstitial'.
+     */
+    export function showInterstitial(): Promise<any>;
+
+    /**
+     * @Deprecated use 'preloadInterstitial' and 'showInterstitial' instead.
+     *
+     * To show a fullscreen banner you can use this function.
+     * Note that Interstitial banners need to be loaded before they can be shown,
      * but don't worry: this plugin will manage that transparently for you.
+     * However, Google won't like it too much, because there will be a delay.
      */
     export function createInterstitial(options: CreateInterstitialOptions): Promise<any>;
 }

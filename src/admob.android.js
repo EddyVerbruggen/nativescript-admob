@@ -1,6 +1,6 @@
-var utils = require("utils/utils");
-var application = require("application");
-var frame = require("ui/frame");
+var utils = require("tns-core-modules/utils/utils");
+var application = require("tns-core-modules/application");
+var frame = require("tns-core-modules/ui/frame");
 var admob = require("./admob-common");
 
 admob._getBannerType = function (size) {
@@ -161,7 +161,7 @@ admob.createBanner = function (arg) {
   });
 };
 
-admob.createInterstitial = function (arg) {
+admob.preloadInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var settings = admob.merge(arg, admob.defaults);
@@ -171,15 +171,19 @@ admob.createInterstitial = function (arg) {
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
-          admob.interstitialView.show();
+          console.log("onAdLoaded");
           resolve();
         },
         onAdFailedToLoad: function (errorCode) {
+          console.log("onAdFailedToLoad: " + errorCode);
           reject(errorCode);
         },
         onAdClosed: function () {
-          admob.interstitialView.setAdListener(null);
-          admob.interstitialView = null;
+          if (admob.interstitialView) {
+            admob.interstitialView.setAdListener(null);
+            admob.interstitialView = null;
+          }
+          arg.onAdClosed && arg.onAdClosed();
         }
       });
       admob.interstitialView.setAdListener(new InterstitialAdListener());
@@ -187,9 +191,35 @@ admob.createInterstitial = function (arg) {
       var ad = admob._buildAdRequest(settings);
       admob.interstitialView.loadAd(ad);
     } catch (ex) {
-      console.log("Error in admob.createBanner: " + ex);
+      console.log("Error in admob.preloadInterstitial: " + ex);
       reject(ex);
     }
+  });
+};
+
+admob.showInterstitial = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.interstitialView) {
+        admob.interstitialView.show();
+        resolve();
+      } else {
+        reject("Please call 'preloadInterstitial' first.");
+      }
+    } catch (ex) {
+      console.log("Error in admob.showInterstitial: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+admob.createInterstitial = function (arg) {
+  return new Promise(function (resolve, reject) {
+    admob.preloadInterstitial(arg)
+        .then(function () {
+          admob.showInterstitial().then(resolve);
+        })
+        .catch(reject);
   });
 };
 
