@@ -1,40 +1,19 @@
 {
   "name": "nativescript-admob",
-  "version": "1.4.2",
-  "description": "Make money with your app by using Google's AdMob ads.",
-  "main": "admob",
-  "nativescript": {
-    "platforms": {
-      "android": "2.3.0",
-      "ios": "2.3.0"
-    }
-  },
+  "version": "1.0.0",
+  "description": "Nativescript admob fork",
+  "main": "index.js",
   "scripts": {
-    "demo.ios": "cd ../demo && tns plugin remove nativescript-admob && tns plugin add ../src && tns run ios",
-    "demo.android": "cd ../demo && tns run android",
-    "demo.android.release": "echo '*** Replace MY_PASSWORD ***' && cd ../demo && tns build android --release --for-device --key-store-path ../../xservices.keystore --key-store-password MY_PASSWORD --key-store-alias xservices --key-store-alias-password MY_PASSWORD && adb install ../demo/platforms/android/app/build/outputs/apk/release/app-release.apk"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eddyverbruggen/nativescript-admob.git"
+    "url": "git+https://github.com/JillevdW/nativescript-admob.git"
   },
-  "keywords": [
-    "exosystem:nativescript",
-    "NativeScript",
-    "iOS",
-    "Android",
-    "AdMob",
-    "Banner",
-    "Interstitial",
-    "Advertisement"
-  ],
-  "author": {
-    "name": "Eddy Verbruggen",
-    "email": "eddyverbruggen@gmail.com"
-  },
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eddyverbruggen/nativescript-admob/issues"
+    "url": "https://github.com/JillevdW/nativescript-admob/issues"
   },
-  "homepage": "https://github.com/eddyverbruggen/nativescript-admob"
+  "homepage": "https://github.com/JillevdW/nativescript-admob#readme"
 }
