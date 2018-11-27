@@ -1,19 +1,71 @@
 {
+  "_from": "nativescript-admob",
+  "_id": "nativescript-admob@3.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-L4FY5e7DKnDjPANK2rO0pKoCzSei0asXwymTfKVrBSBqZ/MX/pTJSsNBMCkJxfPOzg4aGjGIRWQnDfQ0AQMisA==",
+  "_location": "/nativescript-admob",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "nativescript-admob",
+    "name": "nativescript-admob",
+    "escapedName": "nativescript-admob",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/nativescript-admob/-/nativescript-admob-3.2.0.tgz",
+  "_shasum": "5b5d0ffd4aa72e1f9c03e2b7dbb0e624f35ab21c",
+  "_spec": "nativescript-admob",
+  "_where": "/Users/jillevanderweerd/Documents/NativeScript/NDC",
+  "author": {
+    "name": "Eddy Verbruggen",
+    "email": "eddyverbruggen@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/eddyverbruggen/nativescript-admob/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Make money with your app by using Google's AdMob ads.",
+  "devDependencies": {
+    "tns-core-modules": "~4.2.0",
+    "tns-platform-declarations": "~4.2.0"
+  },
+  "homepage": "https://github.com/eddyverbruggen/nativescript-admob",
+  "keywords": [
+    "exosystem:nativescript",
+    "NativeScript",
+    "iOS",
+    "Android",
+    "AdMob",
+    "Banner",
+    "Interstitial",
+    "Advertisement"
+  ],
+  "license": "MIT",
+  "main": "admob",
   "name": "nativescript-admob",
-  "version": "1.0.0",
-  "description": "Nativescript admob fork",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "nativescript": {
+    "platforms": {
+      "android": "2.3.0",
+      "ios": "2.3.0"
+    }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JillevdW/nativescript-admob.git"
+    "url": "git+https://github.com/eddyverbruggen/nativescript-admob.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/JillevdW/nativescript-admob/issues"
+  "scripts": {
+    "demo.android": "cd ../demo && tns plugin remove nativescript-admob && tns plugin add ../src && tns run android",
+    "demo.android.release": "echo '*** Replace MY_PASSWORD ***' && cd ../demo && tns build android --release --for-device --key-store-path ../../xservices.keystore --key-store-password MY_PASSWORD --key-store-alias xservices --key-store-alias-password MY_PASSWORD && adb install ../demo/platforms/android/app/build/outputs/apk/release/app-release.apk",
+    "demo.ios": "cd ../demo && tns plugin remove nativescript-admob && tns plugin add ../src && tns run ios",
+    "generate-typings.ios": "cd ../demo && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in ../demo/typings. Afterwards, remove that folder, and the (intermediate) metadata-* folders.'"
   },
-  "homepage": "https://github.com/JillevdW/nativescript-admob#readme"
+  "version": "3.2.0"
 }

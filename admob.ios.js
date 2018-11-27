@@ -89,17 +89,12 @@ admob._getBannerType = function (size) {
 admob.createBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      // With this removed we can add multiple ads to the app.
-      // if (admob.adView !== null && admob.adView !== undefined) {
-      //   admob.adView.removeFromSuperview();
-      //   admob.adView = null;
-      // }
-
-      // If args doesn't have a view we add the advertisement to the view of the root ViewController.
-      if (arg.view === null || arg.view === undefined) {
-        admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      if (admob.adView !== null && admob.adView !== undefined) {
+        admob.adView.removeFromSuperview();
+        admob.adView = null;
       }
 
+      admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
       var settings = admob.merge(arg, admob.defaults);
       var view = settings.view;
       var bannerType = admob._getBannerType(settings.size);
