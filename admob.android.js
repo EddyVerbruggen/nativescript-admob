@@ -96,7 +96,8 @@ admob.createBanner = function (arg) {
       if (admob.adView !== null && admob.adView !== undefined) {
         var parent = admob.adView.getParent();
         if (parent !== null) {
-          parent.removeView(admob.adView);
+          // Uncommenting this so multiple ads can be shown on the same page.
+          // parent.removeView(admob.adView);
         }
       }
       var settings = admob.merge(arg, admob.defaults);
@@ -138,18 +139,22 @@ admob.createBanner = function (arg) {
       // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(function () {
-        var topmost = frame.topmost();
-        if (topmost !== undefined) {
-          topmost.currentPage &&
-          topmost.currentPage.android &&
-          topmost.currentPage.android.getParent() &&
-          topmost.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        if (arg.view !== null && arg.view !== undefined) {
+          arg.view.addView(adViewLayout, relativeLayoutParamsOuter);
         } else {
-          application.android &&
-          application.android.foregroundActivity &&
-          application.android.foregroundActivity.getWindow() &&
-          application.android.foregroundActivity.getWindow().getDecorView() &&
-          application.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+          var topmost = frame.topmost();
+          if (topmost !== undefined) {
+            topmost.currentPage &&
+            topmost.currentPage.android &&
+            topmost.currentPage.android.getParent() &&
+            topmost.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+          } else {
+            application.android &&
+            application.android.foregroundActivity &&
+            application.android.foregroundActivity.getWindow() &&
+            application.android.foregroundActivity.getWindow().getDecorView() &&
+            application.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+          }
         }
       }, 0);
 
