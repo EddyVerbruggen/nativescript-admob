@@ -240,5 +240,80 @@ admob.hideBanner = function (arg) {
     }
   });
 };
+admob.preloadRewardedVideoAd = function (arg) {
+   return new Promise(function (resolve, reject) {
+     try {
+       var settings = admob.merge(arg, admob.defaults);
+       admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
 
+       // rewardBasedVideoAd
+       // rewardBasedVideoAdDidReceive
+       // rewardBasedVideoAdDidOpen
+       // rewardBasedVideoAdDidStartPlaying
+       // rewardBasedVideoAdDidCompletePlaying
+       // rewardBasedVideoAdDidClose
+       // rewardBasedVideoAdWillLeaveApplication
+        // rewarded Ads ads must be loaded before they can be shown, so adding a listener
+       var InterstitialAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
+         onRewarded(reward) {
+           console.log("onRewarded! currency: " + reward.getType() + "  amount: " + reward.getAmount());
+           arg.onRewarded(reward);
+         },
+         onRewardedVideoAdLeftApplication() {
+           console.log("onRewardedVideoAdLeftApplication");
+         },
+         onRewardedVideoAdClosed() {
+           console.log("onRewardedVideoAdClosed");
+           if (admob.videoView) {
+             admob.videoView.setRewardedVideoAdListener(null);
+             admob.videoView = null;
+           }
+           arg.onClosed();
+         },
+         onRewardedVideoAdFailedToLoad(errorCode) {
+           console.log("onRewardedVideoAdFailedToLoad");
+           reject(errorCode);
+         },
+         onRewardedVideoAdLoaded() {
+           console.log("onRewardedVideoAdLoaded");
+           resolve();
+         },
+         onRewardedVideoAdOpened() {
+           console.log("onRewardedVideoAdOpened");
+         },
+         onRewardedVideoStarted() {
+           console.log("onRewardedVideoStarted");
+         },
+         onRewardedVideoCompleted() {
+           console.log("onRewardedVideoCompleted");
+         }
+       });
+       admob.videoView.setRewardedVideoAdListener(new InterstitialAdListener());
+
+       var ad = admob._buildAdRequest(settings);
+       admob.videoView.loadAd(settings.androidAddPlacementId, ad);
+     } catch (ex) {
+       console.log("Error in admob.preloadVideoAd: " + ex);
+       reject(ex);
+     }
+   });
+ };
+
+  admob.showRewardedVideoAd = function () {
+    console.log("showRewardedVideoAd")
+   return new Promise(function (resolve, reject) {
+     try {
+       if (admob.videoView) {
+         console.log("in android showing")
+         admob.videoView.show();
+         resolve();
+       } else {
+         reject("Please call 'preloadVideoAd' first.");
+       }
+     } catch (ex) {
+       console.log("Error in admob.showVideoAd: " + ex);
+       reject(ex);
+     }
+   });
+ };
 module.exports = admob;
