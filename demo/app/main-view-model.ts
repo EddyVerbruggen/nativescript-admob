@@ -5,7 +5,9 @@ import {
   createInterstitial,
   hideBanner,
   preloadInterstitial,
-  showInterstitial
+  showInterstitial,
+  preloadRewardedVideoAd,
+  showRewardedVideoAd
 } from "nativescript-admob";
 import { isIOS } from "tns-core-modules/platform";
 
@@ -62,7 +64,25 @@ export class HelloWorldModel extends Observable {
         error => this.message = "Error creating interstitial: " + error
     )
   }
-
+  doPreloadRewarded(): void {
+    this.message = "preloading rewarded video";
+    preloadRewardedVideoAd({
+      testing: true,
+      iosAddPlacementId: "ca-app-pub-3940256099942544/1712485313",
+      androidAddPlacementId: "ca-app-pub-3940256099942544/5224354917",
+      onRewarded: () => this.message = "watched rewarded video",
+      onClosed: () => this.message = "closed rewarded video"
+    })
+    .then(() => this.message = "RewardedVideo preloaded")
+    .catch(error => this.message = "Error preloading rewarded Video: " + error)
+  }
+  doShowRewarded(): void {
+    showRewardedVideoAd()
+    .then(() => {
+      this.message = "showing rewarded video";
+    })
+    .catch( error => this.message = "Error showing rewarded Video: " + error)
+  }
   doCreateSmartBanner(): void {
     this.createBanner(AD_SIZE.SMART_BANNER);
   };
