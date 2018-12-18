@@ -234,5 +234,100 @@ admob.hideBanner = function () {
     }
   });
 };
+var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
+  __extends(GADRewardBasedVideoAdDelegateImpl, _super);
+
+  function GADRewardBasedVideoAdDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  GADRewardBasedVideoAdDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidReceive = function (ad) {
+    this._callback(ad);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAd = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidReceive = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidOpen = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidStartPlaying = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidCompletePlaying = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidClose = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdWillLeaveApplication = function (ad) {
+    this._callback(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAd = function (ad) {
+    this._callback(ad);
+  };
+  GADRewardBasedVideoAdDelegateImpl.ObjCProtocols = [GADRewardBasedVideoAdDelegate];
+  return GADRewardBasedVideoAdDelegateImpl;
+})(NSObject);
+
+admob.preloadRewardedVideoAd = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      admob.videoView = GADRewardBasedVideoAd.sharedInstance();
+
+      // Rewarded ads must be loaded before they can be shown, so adding a listener
+      console.log("plz")
+      var delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(function (ad, error) {
+        console.log("********---", ad)
+
+      });
+      var settings = admob.merge(arg, admob.defaults);
+      var adRequest = GADRequest.request();
+      if (settings.testing) {
+        var testDevices = [kGADSimulatorID];
+        if (settings.iosTestDeviceIds) {
+          testDevices = testDevices.concat(settings.iosTestDeviceIds);
+        }
+        adRequest.testDevices = testDevices;
+      }
+
+      admob.videoView.delegate = delegate;
+      admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAddPlacementId);
+    } catch (ex) {
+      console.log("Error in admob.preloadRewardedVideoAd: " + ex);
+      reject(ex);
+    }
+  });
+}
+admob.showRewardedVideoAd = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.interstitialView) {
+        admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+        resolve();
+      } else {
+        reject("Please call 'preloadInterstitial' first.");
+      }
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
 
 module.exports = admob;
