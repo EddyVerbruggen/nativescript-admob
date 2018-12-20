@@ -258,8 +258,8 @@ admob.preloadRewardedVideoAd = function (arg) {
        }
        admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
 
-        // rewarded Ads ads must be loaded before they can be shown, so adding a listener
-       var InterstitialAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
+        // rewarded Ads must be loaded before they can be shown, so adding a listener
+       var RewardedVideoAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
          onRewarded(reward) {
            rewardedVideoCallbacks.onRewarded(reward);
          },
@@ -289,7 +289,7 @@ admob.preloadRewardedVideoAd = function (arg) {
            rewardedVideoCallbacks.onRewardedVideoCompleted();
          }
        });
-       admob.videoView.setRewardedVideoAdListener(new InterstitialAdListener());
+       admob.videoView.setRewardedVideoAdListener(new RewardedVideoAdListener());
 
        var ad = admob._buildAdRequest(settings);
        admob.videoView.loadAd(settings.androidAdPlacementId, ad);
