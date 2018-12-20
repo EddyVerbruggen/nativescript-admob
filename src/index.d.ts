@@ -149,12 +149,12 @@ declare module "nativescript-admob" {
      /**
       * Something like "ca-app-pub-AAAAAAAA/BBBBBBB".
       */
-     androidAddPlacementId?: string;
+     androidAdPlacementId?: string;
 
      /**
       * Something like "ca-app-pub-XXXXXX/YYYYYY".
       */
-     iosAddPlacementId?: string;
+     iosAdPlacementId?: string;
 
      /**
       * If testing is true, the simulator is allowed to receive test banners.

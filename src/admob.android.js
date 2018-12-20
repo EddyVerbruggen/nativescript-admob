@@ -254,7 +254,7 @@ admob.preloadRewardedVideoAd = function (arg) {
      try {
        var settings = admob.merge(arg, admob.defaults);
        if(settings.testing) {
-         settings.androidAddPlacementId = "ca-app-pub-3940256099942544/5224354917";
+         settings.androidAdPlacementId = "ca-app-pub-3940256099942544/5224354917";
        }
        admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
 
@@ -292,7 +292,7 @@ admob.preloadRewardedVideoAd = function (arg) {
        admob.videoView.setRewardedVideoAdListener(new InterstitialAdListener());
 
        var ad = admob._buildAdRequest(settings);
-       admob.videoView.loadAd(settings.androidAddPlacementId, ad);
+       admob.videoView.loadAd(settings.androidAdPlacementId, ad);
      } catch (ex) {
        console.log("Error in admob.preloadVideoAd: " + ex);
        reject(ex);

@@ -310,11 +310,11 @@ admob.preloadRewardedVideoAd = function (arg) {
       var settings = admob.merge(arg, admob.defaults);
       var adRequest = GADRequest.request();
       if (settings.testing) {
-        settings.iosAddPlacementId = "ca-app-pub-3940256099942544/1712485313";
+        settings.iosAdPlacementId = "ca-app-pub-3940256099942544/1712485313";
 
       }
 
-      admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAddPlacementId);
+      admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAdPlacementId);
     } catch (ex) {
       console.log("Error in admob.preloadRewardedVideoAd: " + ex);
       reject(ex);
