@@ -258,15 +258,12 @@ admob.preloadRewardedVideoAd = function (arg) {
         // rewarded Ads ads must be loaded before they can be shown, so adding a listener
        var InterstitialAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
          onRewarded(reward) {
-           // console.log("onRewarded! currency: " + reward.getType() + "  amount: " + reward.getAmount());
            rewardedVideoCallbacks.onRewarded(reward);
          },
          onRewardedVideoAdLeftApplication() {
-           // console.log("onRewardedVideoAdLeftApplication");
            rewardedVideoCallbacks.onRewardedVideoAdLeftApplication();
          },
          onRewardedVideoAdClosed() {
-           // console.log("onRewardedVideoAdClosed");
            if (admob.videoView) {
              admob.videoView.setRewardedVideoAdListener(null);
              admob.videoView = null;
@@ -274,23 +271,18 @@ admob.preloadRewardedVideoAd = function (arg) {
            rewardedVideoCallbacks.onRewardedVideoAdClosed();
          },
          onRewardedVideoAdFailedToLoad(errorCode) {
-           // console.log("onRewardedVideoAdFailedToLoad");
            reject(errorCode);
          },
          onRewardedVideoAdLoaded() {
-           // console.log("onRewardedVideoAdLoaded");
            resolve();
          },
          onRewardedVideoAdOpened() {
-           // console.log("onRewardedVideoAdOpened");
            rewardedVideoCallbacks.onRewardedVideoAdOpened();
          },
          onRewardedVideoStarted() {
-           // console.log("onRewardedVideoStarted");
            rewardedVideoCallbacks.onRewardedVideoStarted();
          },
          onRewardedVideoCompleted() {
-           // console.log("onRewardedVideoCompleted");
            rewardedVideoCallbacks.onRewardedVideoCompleted();
          }
        });
