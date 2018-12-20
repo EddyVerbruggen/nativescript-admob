@@ -253,6 +253,9 @@ admob.preloadRewardedVideoAd = function (arg) {
    return new Promise(function (resolve, reject) {
      try {
        var settings = admob.merge(arg, admob.defaults);
+       if(settings.testing) {
+         settings.androidAddPlacementId = "ca-app-pub-3940256099942544/5224354917";
+       }
        admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
 
         // rewarded Ads ads must be loaded before they can be shown, so adding a listener
@@ -298,8 +301,6 @@ admob.preloadRewardedVideoAd = function (arg) {
  };
 
   admob.showRewardedVideoAd = function (arg) {
-    console.log("showRewardedVideoAd");
-
     if(arg.onRewarded) {
       rewardedVideoCallbacks.onRewarded = arg.onRewarded;
     }
@@ -321,7 +322,6 @@ admob.preloadRewardedVideoAd = function (arg) {
    return new Promise(function (resolve, reject) {
      try {
        if (admob.videoView) {
-         console.log("in android showing")
          admob.videoView.show();
          resolve();
        } else {

@@ -162,8 +162,6 @@ declare module "nativescript-admob" {
       * If you also want to test on real devices, add it here like this:
       *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
       */
-     iosTestDeviceIds?: string[];
-
      /**
       * Specify keywords for ad targeting
       */

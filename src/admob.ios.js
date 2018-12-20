@@ -310,11 +310,8 @@ admob.preloadRewardedVideoAd = function (arg) {
       var settings = admob.merge(arg, admob.defaults);
       var adRequest = GADRequest.request();
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
-        if (settings.iosTestDeviceIds) {
-          testDevices = testDevices.concat(settings.iosTestDeviceIds);
-        }
-        adRequest.testDevices = testDevices;
+        settings.iosAddPlacementId = "ca-app-pub-3940256099942544/1712485313";
+
       }
 
       admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAddPlacementId);
