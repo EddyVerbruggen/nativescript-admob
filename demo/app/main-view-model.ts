@@ -76,9 +76,13 @@ export class HelloWorldModel extends Observable {
   }
   doShowRewarded(): void {
     showRewardedVideoAd({
-      onRewarded: () => this.message = "watched rewarded video",
+      onRewarded: (reward) => {
+        console.log("onRewarded");
+        this.message = "watched rewarded video";
+        console.dir(reward);
+      },
       onRewardedVideoAdLeftApplication: () => console.log("onRewardedVideoAdLeftApplication"),
-      onRewardedVideoAdClosed: () => this.message = "closed rewarded video",
+      onRewardedVideoAdClosed: () => console.log("onRewardedVideoAdClosed"),
       onRewardedVideoAdOpened: () => console.log("onRewardedVideoAdOpened"),
       onRewardedVideoStarted: () => console.log("onRewardedVideoStarted"),
       onRewardedVideoCompleted: () => console.log("onRewardedVideoCompleted"),

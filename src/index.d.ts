@@ -173,7 +173,7 @@ declare module "nativescript-admob" {
       */
     }
     export interface ShowRewardedOptions {
-      onRewarded?: () => void;
+      onRewarded?: (reward: any) => void;
       onRewardedVideoAdLeftApplication?: () => void;
       onRewardedVideoAdClosed?: () => void;
       onRewardedVideoAdOpened?: () => void;

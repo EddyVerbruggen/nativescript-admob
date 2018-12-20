@@ -256,12 +256,10 @@ var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidFailToLoadWithError = function (ad, error) {
     this._error(error);
   };
-  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidRewardUserWithReward = function (ad, error) {
-    console.log("sdfksghdfkhgsdf");
-    this._callbacks.onRewarded(ad);
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidRewardUserWithReward = function (ad, reward) {
+    this._callbacks.onRewarded(reward);
   };
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidOpen = function (ad) {
-    console.log("opened: ",   this._callbacks);
     this._callbacks.onRewardedVideoAdOpened(ad);
   };
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidStartPlaying = function (ad) {
@@ -278,6 +276,7 @@ var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
     this._callbacks.onRewardedVideoAdClosed(ad);
   };
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdWillLeaveApplication = function (ad) {
+    console.log("leftApplication")
     this._callbacks.onRewardedVideoAdLeftApplication(ad);
   };
 
@@ -296,7 +295,7 @@ let rewardedVideoCallbacks = {
 admob.preloadRewardedVideoAd = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      admob.videoView = GADRewardBasedVideoAd.sharedInstance();
+      admob.videoView = GADRewardBasedVideoAd.new();
 
       // Rewarded ads must be loaded before they can be shown, so adding a listener
       function loaded() {
