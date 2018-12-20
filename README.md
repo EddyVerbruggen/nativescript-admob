@@ -123,7 +123,7 @@ To show a fullscreen ad, you can use this function. Note that Interstitial banne
 they can be shown, and there are two ways to do that:
 
 * Use `createInterstitial` and have the plugin automatically preload the ad and show it when loaded. This is not recommended because there's a delay the user may notice.
-* (Since plugin version 2.0.0) Use `preloadInterstitial`, and (at any time after its Promise resolves) `showInterstitial`. This will hide the preloading delay for your users. Note that the parameters of `createInterstitial` and `preloadInterstitial` are exactly the same so migration should be easy.
+* (Since plugin version 2.0.0) Use `preloadInterstitial`, and (at any time after its Promise resolves) `showInterstitial`. This will hide the preloading delay for your users. Note that the parameters of `createInterstitial` and `preloadInterstitial` are exactly the same so migration should be easy. 
 
 If you want to get notified when an interstitial is closed, provide an `onAdClosed` callback as shown below.
 
@@ -176,7 +176,7 @@ admob.preloadInterstitial({
 ### showInterstitial
 At any moment after `preloadInterstitial` successfully resolves, you can call `showInterstitial`.
 
-Note that when you want to use `showInterstitial` again, you also have to use `preloadInterstitial` again because those ads can't be reused.
+Note that when you want to use `showInterstitial` again, you also have to use `preloadInterstitial` again because those ads can't be reused. 
 
 ```js
 admob.showInterstitial().then(
