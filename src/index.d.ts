@@ -142,7 +142,7 @@ declare module "nativescript-admob" {
      */
     export interface CreateRewardedOptions {
      /**
-      * When false (default) you'll get real banners.
+      * When true you'll use googles testing iosAdPlacementId and androidAdPlacementId.
       */
      testing?: boolean;
 
@@ -156,12 +156,6 @@ declare module "nativescript-admob" {
       */
      iosAdPlacementId?: string;
 
-     /**
-      * If testing is true, the simulator is allowed to receive test banners.
-      * Android automatically add the connceted device as test device, but iOS does not.
-      * If you also want to test on real devices, add it here like this:
-      *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
-      */
      /**
       * Specify keywords for ad targeting
       */
