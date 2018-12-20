@@ -244,59 +244,82 @@ var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
   GADRewardBasedVideoAdDelegateImpl.new = function () {
     return _super.new.call(this);
   };
-  GADRewardBasedVideoAdDelegateImpl.prototype.initWithCallback = function (callback) {
-    this._callback = callback;
+  GADRewardBasedVideoAdDelegateImpl.prototype.initWithCallback = function (loaded, callbacks) {
+    this._callbacks = callbacks;
+    this._loaded = loaded;
     return this;
   };
-  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidReceive = function (ad) {
-    this._callback(ad);
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidReceiveAd = function (ad) {
+    console.log("loaded in ios")
+    this._loaded();
   };
-  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAd = function (ad) {
-    this._callback(ad);
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidFailToLoadWithError = function (ad) {
+    console.log("rewardBasedVideoAdDidFailToLoadWithError")
+    // this._loaded();
   };
-
-  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidReceive = function (ad) {
-    this._callback(ad);
-  };
-
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidOpen = function (ad) {
-    this._callback(ad);
+    this._callbacks.onRewardedVideoAdOpened(ad);
   };
-
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidStartPlaying = function (ad) {
-    this._callback(ad);
+    this._callbacks.onRewardedVideoStarted(ad);
   };
-
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidCompletePlaying = function (ad) {
-    this._callback(ad);
+    this._callbacks.onRewardedVideoCompleted(ad);
   };
-
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidClose = function (ad) {
-    this._callback(ad);
+    if (admob.videoView) {
+      admob.videoView.setRewardedVideoAdListener(null);
+      admob.videoView = null;
+    }
+    this._callbacks.onRewardedVideoAdClosed(ad);
   };
-
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdWillLeaveApplication = function (ad) {
-    this._callback(ad);
+    this._callbacks.onRewardedVideoAdClosed(ad);
   };
 
-  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAd = function (ad) {
-    this._callback(ad);
-  };
-  GADRewardBasedVideoAdDelegateImpl.ObjCProtocols = [GADRewardBasedVideoAdDelegate];
+ //  (void)rewardBasedVideoAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd
+ //     didRewardUserWithReward:(GADAdReward *)reward {
+ //   NSString *rewardMessage =
+ //       [NSString stringWithFormat:@"Reward received with currency %@ , amount %lf",
+ //           reward.type,
+ //           [reward.amount doubleValue]];
+ //   NSLog(rewardMessage);
+ // }
+ //
+ //
+ //
+ //
+ //
+ //
+ //
+ // - (void)rewardBasedVideoAd:(GADRewardBasedVideoAd *)rewardBasedVideoAd
+ //     didFailToLoadWithError:(NSError *)error {
+ //   NSLog(@"Reward based video ad failed to load.");
+ // }
+ GADRewardBasedVideoAdDelegateImpl.ObjCProtocols = [GADRewardBasedVideoAdDelegate];
   return GADRewardBasedVideoAdDelegateImpl;
 })(NSObject);
 
+let rewardedVideoCallbacks = {
+  onRewarded: () => {},
+  onRewardedVideoAdLeftApplication: () => {},
+  onRewardedVideoAdClosed: () => {},
+  onRewardedVideoAdOpened: () => {},
+  onRewardedVideoStarted: () => {},
+  onRewardedVideoCompleted: () => {},
+}
 admob.preloadRewardedVideoAd = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       admob.videoView = GADRewardBasedVideoAd.sharedInstance();
 
       // Rewarded ads must be loaded before they can be shown, so adding a listener
-      console.log("plz")
-      var delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(function (ad, error) {
-        console.log("********---", ad)
+      function loaded() {
+        resolve();
+      }
+      var delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(loaded, rewardedVideoCallbacks);
+      admob.videoView.delegate = delegate;
 
-      });
       var settings = admob.merge(arg, admob.defaults);
       var adRequest = GADRequest.request();
       if (settings.testing) {
@@ -307,7 +330,6 @@ admob.preloadRewardedVideoAd = function (arg) {
         adRequest.testDevices = testDevices;
       }
 
-      admob.videoView.delegate = delegate;
       admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAddPlacementId);
     } catch (ex) {
       console.log("Error in admob.preloadRewardedVideoAd: " + ex);
@@ -315,14 +337,32 @@ admob.preloadRewardedVideoAd = function (arg) {
     }
   });
 }
-admob.showRewardedVideoAd = function () {
+admob.showRewardedVideoAd = function (arg) {
+  if(arg.onRewarded) {
+    rewardedVideoCallbacks.onRewarded = arg.onRewarded;
+  }
+  if(arg.onRewardedVideoAdLeftApplication) {
+    rewardedVideoCallbacks.onRewardedVideoAdLeftApplication = arg.onRewardedVideoAdLeftApplication;
+  }
+  if(arg.onRewardedVideoAdClosed) {
+    rewardedVideoCallbacks.onRewardedVideoAdClosed = arg.onRewardedVideoAdClosed;
+  }
+  if(arg.onRewardedVideoAdOpened) {
+    rewardedVideoCallbacks.onRewardedVideoAdOpened = arg.onRewardedVideoAdOpened;
+  }
+  if(arg.onRewardedVideoStarted) {
+    rewardedVideoCallbacks.onRewardedVideoStarted = arg.onRewardedVideoStarted;
+  }
+  if(arg.onRewardedVideoCompleted) {
+    rewardedVideoCallbacks.onRewardedVideoCompleted = arg.onRewardedVideoCompleted;
+  }
   return new Promise(function (resolve, reject) {
     try {
-      if (admob.interstitialView) {
-        admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+      if (admob.videoView) {
+        admob.videoView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
         resolve();
       } else {
-        reject("Please call 'preloadInterstitial' first.");
+        reject("Please call 'preloadRewardedVideoAd' first.");
       }
     } catch (ex) {
       reject(ex);
