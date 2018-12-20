@@ -70,14 +70,19 @@ export class HelloWorldModel extends Observable {
       testing: true,
       iosAddPlacementId: "ca-app-pub-3940256099942544/1712485313",
       androidAddPlacementId: "ca-app-pub-3940256099942544/5224354917",
-      onRewarded: () => this.message = "watched rewarded video",
-      onClosed: () => this.message = "closed rewarded video"
     })
     .then(() => this.message = "RewardedVideo preloaded")
     .catch(error => this.message = "Error preloading rewarded Video: " + error)
   }
   doShowRewarded(): void {
-    showRewardedVideoAd()
+    showRewardedVideoAd({
+      onRewarded: () => this.message = "watched rewarded video",
+      onRewardedVideoAdLeftApplication: () => console.log("onRewardedVideoAdLeftApplication"),
+      onRewardedVideoAdClosed: () => this.message = "closed rewarded video",
+      onRewardedVideoAdOpened: () => console.log("onRewardedVideoAdOpened"),
+      onRewardedVideoStarted: () => console.log("onRewardedVideoStarted"),
+      onRewardedVideoCompleted: () => console.log("onRewardedVideoCompleted"),
+    })
     .then(() => {
       this.message = "showing rewarded video";
     })

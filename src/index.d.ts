@@ -171,8 +171,14 @@ declare module "nativescript-admob" {
      /**
       * Invoked when the user closes the interstitial.
       */
-     onRewarded?: () => void;
-     onClosed?: () => void;
+    }
+    export interface ShowRewardedOptions {
+      onRewarded?: () => void;
+      onRewardedVideoAdLeftApplication?: () => void;
+      onRewardedVideoAdClosed?: () => void;
+      onRewardedVideoAdOpened?: () => void;
+      onRewardedVideoStarted?: () => void;
+      onRewardedVideoCompleted?: () => void;
     }
     export interface AdReward {
       /**
@@ -192,5 +198,5 @@ declare module "nativescript-admob" {
     /**
      * To show a reward video add you can use this function to preload the ad.
      */
-    export function showRewardedVideoAd(): Promise<any>;
+    export function showRewardedVideoAd(options: ShowRewardedOptions): Promise<any>;
 }
