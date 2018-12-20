@@ -123,7 +123,7 @@ To show a fullscreen ad, you can use this function. Note that Interstitial banne
 they can be shown, and there are two ways to do that:
 
 * Use `createInterstitial` and have the plugin automatically preload the ad and show it when loaded. This is not recommended because there's a delay the user may notice.
-* (Since plugin version 2.0.0) Use `preloadInterstitial`, and (at any time after its Promise resolves) `showInterstitial`. This will hide the preloading delay for your users. Note that the parameters of `createInterstitial` and `preloadInterstitial` are exactly the same so migration should be easy. 
+* (Since plugin version 2.0.0) Use `preloadInterstitial`, and (at any time after its Promise resolves) `showInterstitial`. This will hide the preloading delay for your users. Note that the parameters of `createInterstitial` and `preloadInterstitial` are exactly the same so migration should be easy.
 
 If you want to get notified when an interstitial is closed, provide an `onAdClosed` callback as shown below.
 
@@ -176,7 +176,7 @@ admob.preloadInterstitial({
 ### showInterstitial
 At any moment after `preloadInterstitial` successfully resolves, you can call `showInterstitial`.
 
-Note that when you want to use `showInterstitial` again, you also have to use `preloadInterstitial` again because those ads can't be reused. 
+Note that when you want to use `showInterstitial` again, you also have to use `preloadInterstitial` again because those ads can't be reused.
 
 ```js
 admob.showInterstitial().then(
@@ -186,6 +186,54 @@ admob.showInterstitial().then(
       },
       function(error) {
         console.log("admob showInterstitial error: " + error);
+      }
+)
+```
+
+
+### preloadRewardedVideoAd
+Use this for instance while loading your view, so it's ready for the moment you want to actually show it (by calling `showRewardedVideoAd`).
+
+```js
+admob.preloadRewardedVideoAd({
+    testing: true,
+    iosAdPlacementId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
+    androidAdPlacementId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+  }).then(
+      function() {
+        console.log("RewardedVideoAd preloaded - you can now call 'showRewardedVideoAd' whenever you're ready to do so");
+      },
+      function(error) {
+        console.log("admob preloadRewardedVideoAd error: " + error);
+      }
+)
+```
+
+### showRewardedVideoAd
+At any moment after `preloadRewardedVideoAd` successfully resolves, you can call `showRewardedVideoAd`.
+
+Note that when you want to use `showRewardedVideoAd` again, you also have to use `preloadRewardedVideoAd` again because those ads can't be reused.
+
+onRewarded is probably the only callback you need to worry about.
+
+```js
+admob.showRewardedVideoAd({
+  onRewarded: (reward) => {
+    console.log("onRewarded");
+    this.message = "watched rewarded video";
+  },
+  onRewardedVideoAdLeftApplication: () => console.log("onRewardedVideoAdLeftApplication"),
+  onRewardedVideoAdClosed: () => console.log("onRewardedVideoAdClosed"),
+  onRewardedVideoAdOpened: () => console.log("onRewardedVideoAdOpened"),
+  onRewardedVideoStarted: () => console.log("onRewardedVideoStarted"),
+  onRewardedVideoCompleted: () => console.log("onRewardedVideoCompleted"),
+}).then(
+      function() {
+        console.log("RewardedVideoAd showing");
+      },
+      function(error) {
+        console.log("admob showRewardedVideoAd error: " + error);
       }
 )
 ```
