@@ -285,17 +285,18 @@ var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
 })(NSObject);
 
 let rewardedVideoCallbacks = {
-  onRewarded: () => {},
+  onRewarded: () => { console.warn("onRewarded callback not set")},
   onRewardedVideoAdLeftApplication: () => {},
   onRewardedVideoAdClosed: () => {},
   onRewardedVideoAdOpened: () => {},
   onRewardedVideoStarted: () => {},
   onRewardedVideoCompleted: () => {},
 }
+var delegate = null;
 admob.preloadRewardedVideoAd = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      admob.videoView = GADRewardBasedVideoAd.new();
+      admob.videoView = GADRewardBasedVideoAd.sharedInstance();
 
       // Rewarded ads must be loaded before they can be shown, so adding a listener
       function loaded() {
@@ -304,14 +305,13 @@ admob.preloadRewardedVideoAd = function (arg) {
       function error(errorMessage) {
         reject(errorMessage);
       }
-      var delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(loaded, error, rewardedVideoCallbacks);
+      delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(loaded, error, rewardedVideoCallbacks);
       admob.videoView.delegate = delegate;
 
       var settings = admob.merge(arg, admob.defaults);
       var adRequest = GADRequest.request();
       if (settings.testing) {
         settings.iosAdPlacementId = "ca-app-pub-3940256099942544/1712485313";
-
       }
 
       admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAdPlacementId);
