@@ -242,95 +242,102 @@ admob.hideBanner = function (arg) {
 };
 
 let rewardedVideoCallbacks = {
-  onRewarded: () => {},
-  onRewardedVideoAdLeftApplication: () => {},
-  onRewardedVideoAdClosed: () => {},
-  onRewardedVideoAdOpened: () => {},
-  onRewardedVideoStarted: () => {},
-  onRewardedVideoCompleted: () => {},
-}
+  onRewarded: () => {
+  },
+  onRewardedVideoAdLeftApplication: () => {
+  },
+  onRewardedVideoAdClosed: () => {
+  },
+  onRewardedVideoAdOpened: () => {
+  },
+  onRewardedVideoStarted: () => {
+  },
+  onRewardedVideoCompleted: () => {
+  },
+};
+
 admob.preloadRewardedVideoAd = function (arg) {
-   return new Promise(function (resolve, reject) {
-     try {
-       var settings = admob.merge(arg, admob.defaults);
-       if(settings.testing) {
-         settings.androidAdPlacementId = "ca-app-pub-3940256099942544/5224354917";
-       }
-       admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
+  return new Promise(function (resolve, reject) {
+    try {
+      var settings = admob.merge(arg, admob.defaults);
+      if (settings.testing) {
+        settings.androidAdPlacementId = "ca-app-pub-3940256099942544/5224354917";
+      }
+      admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
 
-        // rewarded Ads must be loaded before they can be shown, so adding a listener
-       var RewardedVideoAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
-         onRewarded(reward) {
-           rewardedVideoCallbacks.onRewarded(reward);
-         },
-         onRewardedVideoAdLeftApplication() {
-           rewardedVideoCallbacks.onRewardedVideoAdLeftApplication();
-         },
-         onRewardedVideoAdClosed() {
-           if (admob.videoView) {
-             admob.videoView.setRewardedVideoAdListener(null);
-             admob.videoView = null;
-           }
-           rewardedVideoCallbacks.onRewardedVideoAdClosed();
-         },
-         onRewardedVideoAdFailedToLoad(errorCode) {
-           reject(errorCode);
-         },
-         onRewardedVideoAdLoaded() {
-           resolve();
-         },
-         onRewardedVideoAdOpened() {
-           rewardedVideoCallbacks.onRewardedVideoAdOpened();
-         },
-         onRewardedVideoStarted() {
-           rewardedVideoCallbacks.onRewardedVideoStarted();
-         },
-         onRewardedVideoCompleted() {
-           rewardedVideoCallbacks.onRewardedVideoCompleted();
-         }
-       });
-       admob.videoView.setRewardedVideoAdListener(new RewardedVideoAdListener());
+      // rewarded Ads must be loaded before they can be shown, so adding a listener
+      var RewardedVideoAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
+        onRewarded(reward) {
+          rewardedVideoCallbacks.onRewarded(reward);
+        },
+        onRewardedVideoAdLeftApplication() {
+          rewardedVideoCallbacks.onRewardedVideoAdLeftApplication();
+        },
+        onRewardedVideoAdClosed() {
+          if (admob.videoView) {
+            admob.videoView.setRewardedVideoAdListener(null);
+            admob.videoView = null;
+          }
+          rewardedVideoCallbacks.onRewardedVideoAdClosed();
+        },
+        onRewardedVideoAdFailedToLoad(errorCode) {
+          reject(errorCode);
+        },
+        onRewardedVideoAdLoaded() {
+          resolve();
+        },
+        onRewardedVideoAdOpened() {
+          rewardedVideoCallbacks.onRewardedVideoAdOpened();
+        },
+        onRewardedVideoStarted() {
+          rewardedVideoCallbacks.onRewardedVideoStarted();
+        },
+        onRewardedVideoCompleted() {
+          rewardedVideoCallbacks.onRewardedVideoCompleted();
+        }
+      });
+      admob.videoView.setRewardedVideoAdListener(new RewardedVideoAdListener());
 
-       var ad = admob._buildAdRequest(settings);
-       admob.videoView.loadAd(settings.androidAdPlacementId, ad);
-     } catch (ex) {
-       console.log("Error in admob.preloadVideoAd: " + ex);
-       reject(ex);
-     }
-   });
- };
+      var ad = admob._buildAdRequest(settings);
+      admob.videoView.loadAd(settings.androidAdPlacementId, ad);
+    } catch (ex) {
+      console.log("Error in admob.preloadRewardedVideoAd: " + ex);
+      reject(ex);
+    }
+  });
+};
 
-  admob.showRewardedVideoAd = function (arg) {
-    if(arg.onRewarded) {
-      rewardedVideoCallbacks.onRewarded = arg.onRewarded;
+admob.showRewardedVideoAd = function (arg) {
+  if (arg.onRewarded) {
+    rewardedVideoCallbacks.onRewarded = arg.onRewarded;
+  }
+  if (arg.onRewardedVideoAdLeftApplication) {
+    rewardedVideoCallbacks.onRewardedVideoAdLeftApplication = arg.onRewardedVideoAdLeftApplication;
+  }
+  if (arg.onRewardedVideoAdClosed) {
+    rewardedVideoCallbacks.onRewardedVideoAdClosed = arg.onRewardedVideoAdClosed;
+  }
+  if (arg.onRewardedVideoAdOpened) {
+    rewardedVideoCallbacks.onRewardedVideoAdOpened = arg.onRewardedVideoAdOpened;
+  }
+  if (arg.onRewardedVideoStarted) {
+    rewardedVideoCallbacks.onRewardedVideoStarted = arg.onRewardedVideoStarted;
+  }
+  if (arg.onRewardedVideoCompleted) {
+    rewardedVideoCallbacks.onRewardedVideoCompleted = arg.onRewardedVideoCompleted;
+  }
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.videoView) {
+        admob.videoView.show();
+        resolve();
+      } else {
+        reject("Please call 'preloadVideoAd' first.");
+      }
+    } catch (ex) {
+      console.log("Error in admob.showVideoAd: " + ex);
+      reject(ex);
     }
-    if(arg.onRewardedVideoAdLeftApplication) {
-      rewardedVideoCallbacks.onRewardedVideoAdLeftApplication = arg.onRewardedVideoAdLeftApplication;
-    }
-    if(arg.onRewardedVideoAdClosed) {
-      rewardedVideoCallbacks.onRewardedVideoAdClosed = arg.onRewardedVideoAdClosed;
-    }
-    if(arg.onRewardedVideoAdOpened) {
-      rewardedVideoCallbacks.onRewardedVideoAdOpened = arg.onRewardedVideoAdOpened;
-    }
-    if(arg.onRewardedVideoStarted) {
-      rewardedVideoCallbacks.onRewardedVideoStarted = arg.onRewardedVideoStarted;
-    }
-    if(arg.onRewardedVideoCompleted) {
-      rewardedVideoCallbacks.onRewardedVideoCompleted = arg.onRewardedVideoCompleted;
-    }
-   return new Promise(function (resolve, reject) {
-     try {
-       if (admob.videoView) {
-         admob.videoView.show();
-         resolve();
-       } else {
-         reject("Please call 'preloadVideoAd' first.");
-       }
-     } catch (ex) {
-       console.log("Error in admob.showVideoAd: " + ex);
-       reject(ex);
-     }
-   });
- };
+  });
+};
 module.exports = admob;

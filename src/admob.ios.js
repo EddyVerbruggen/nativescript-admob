@@ -47,9 +47,6 @@ admob._getBannerType = function (size) {
   // console.log("kGADAdSizeSmartBannerLandscape: " + JSON.stringify(kGADAdSizeSmartBannerLandscape));
   // console.log("kGADAdSizeInvalid: " + JSON.stringify(kGADAdSizeInvalid));
 
-  console.log(UIDeviceOrientation.UIDeviceOrientationPortrait);
-  console.log(typeof(UIDeviceOrientation.UIDeviceOrientationPortrait));
-
   if (size === admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
     return {"size": {"width": 320, "height": 50}, "flags": 0};
@@ -71,8 +68,6 @@ admob._getBannerType = function (size) {
   } else if (size === admob.AD_SIZE.SMART_BANNER || size === admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = device.deviceType === DeviceType.Tablet;
-    console.log(orientation);
-    console.log(typeof(orientation));
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
@@ -168,12 +163,14 @@ admob.preloadInterstitial = function (arg) {
               // now we can safely show it, but leave that to the calling code
               resolve();
             }
+            CFRelease(delegate);
             delegate = undefined;
           },
           function () {
             arg.onAdClosed && arg.onAdClosed();
           });
 
+      CFRetain(delegate);
       admob.interstitialView.delegate = delegate;
 
       var adRequest = GADRequest.request();
@@ -234,6 +231,7 @@ admob.hideBanner = function () {
     }
   });
 };
+
 var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
   __extends(GADRewardBasedVideoAdDelegateImpl, _super);
 
@@ -274,9 +272,12 @@ var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
       admob.videoView = null;
     }
     this._callbacks.onRewardedVideoAdClosed(ad);
+    setTimeout(function () {
+      CFRelease(rewardBasedVideoAdDelegate);
+      rewardBasedVideoAdDelegate = undefined;
+    });
   };
   GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdWillLeaveApplication = function (ad) {
-    console.log("leftApplication")
     this._callbacks.onRewardedVideoAdLeftApplication(ad);
   };
 
@@ -285,14 +286,23 @@ var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
 })(NSObject);
 
 let rewardedVideoCallbacks = {
-  onRewarded: () => { console.warn("onRewarded callback not set")},
-  onRewardedVideoAdLeftApplication: () => {},
-  onRewardedVideoAdClosed: () => {},
-  onRewardedVideoAdOpened: () => {},
-  onRewardedVideoStarted: () => {},
-  onRewardedVideoCompleted: () => {},
-}
-var delegate = null;
+  onRewarded: () => {
+    console.warn("onRewarded callback not set")
+  },
+  onRewardedVideoAdLeftApplication: () => {
+  },
+  onRewardedVideoAdClosed: () => {
+  },
+  onRewardedVideoAdOpened: () => {
+  },
+  onRewardedVideoStarted: () => {
+  },
+  onRewardedVideoCompleted: () => {
+  },
+};
+
+var rewardBasedVideoAdDelegate = undefined;
+
 admob.preloadRewardedVideoAd = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -302,11 +312,14 @@ admob.preloadRewardedVideoAd = function (arg) {
       function loaded() {
         resolve();
       }
+
       function error(errorMessage) {
         reject(errorMessage);
       }
-      delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(loaded, error, rewardedVideoCallbacks);
-      admob.videoView.delegate = delegate;
+
+      rewardBasedVideoAdDelegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(loaded, error, rewardedVideoCallbacks);
+      CFRetain(rewardBasedVideoAdDelegate);
+      admob.videoView.delegate = rewardBasedVideoAdDelegate;
 
       var settings = admob.merge(arg, admob.defaults);
       var adRequest = GADRequest.request();
@@ -320,24 +333,25 @@ admob.preloadRewardedVideoAd = function (arg) {
       reject(ex);
     }
   });
-}
+};
+
 admob.showRewardedVideoAd = function (arg) {
-  if(arg.onRewarded) {
+  if (arg.onRewarded) {
     rewardedVideoCallbacks.onRewarded = arg.onRewarded;
   }
-  if(arg.onRewardedVideoAdLeftApplication) {
+  if (arg.onRewardedVideoAdLeftApplication) {
     rewardedVideoCallbacks.onRewardedVideoAdLeftApplication = arg.onRewardedVideoAdLeftApplication;
   }
-  if(arg.onRewardedVideoAdClosed) {
+  if (arg.onRewardedVideoAdClosed) {
     rewardedVideoCallbacks.onRewardedVideoAdClosed = arg.onRewardedVideoAdClosed;
   }
-  if(arg.onRewardedVideoAdOpened) {
+  if (arg.onRewardedVideoAdOpened) {
     rewardedVideoCallbacks.onRewardedVideoAdOpened = arg.onRewardedVideoAdOpened;
   }
-  if(arg.onRewardedVideoStarted) {
+  if (arg.onRewardedVideoStarted) {
     rewardedVideoCallbacks.onRewardedVideoStarted = arg.onRewardedVideoStarted;
   }
-  if(arg.onRewardedVideoCompleted) {
+  if (arg.onRewardedVideoCompleted) {
     rewardedVideoCallbacks.onRewardedVideoCompleted = arg.onRewardedVideoCompleted;
   }
   return new Promise(function (resolve, reject) {
