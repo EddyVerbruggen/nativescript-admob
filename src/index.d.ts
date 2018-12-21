@@ -137,4 +137,58 @@ declare module "nativescript-admob" {
      * However, Google won't like it too much, because there will be a delay.
      */
     export function createInterstitial(options: CreateInterstitialOptions): Promise<any>;
+
+    /**
+     */
+    export interface CreateRewardedOptions {
+     /**
+      * When true you'll use googles testing iosAdPlacementId and androidAdPlacementId.
+      */
+     testing?: boolean;
+
+     /**
+      * Something like "ca-app-pub-AAAAAAAA/BBBBBBB".
+      */
+     androidAdPlacementId?: string;
+
+     /**
+      * Something like "ca-app-pub-XXXXXX/YYYYYY".
+      */
+     iosAdPlacementId?: string;
+
+     /**
+      * Specify keywords for ad targeting
+      */
+     keywords?: string[];
+     /**
+      * Invoked when the user closes the interstitial.
+      */
+    }
+    export interface ShowRewardedOptions {
+      onRewarded?: (reward: any) => void;
+      onRewardedVideoAdLeftApplication?: () => void;
+      onRewardedVideoAdClosed?: () => void;
+      onRewardedVideoAdOpened?: () => void;
+      onRewardedVideoStarted?: () => void;
+      onRewardedVideoCompleted?: () => void;
+    }
+    export interface AdReward {
+      /**
+       * Type of the reward.
+       */
+      type: string;
+
+      /**
+       * Amount rewarded to the user.
+       */
+      amount: number;
+    }
+    /**
+     * To show a reward video add you can use this function to preload the ad.
+     */
+    export function preloadRewardedVideoAd(options: CreateRewardedOptions): Promise<any>;
+    /**
+     * To show a reward video add you can use this function to preload the ad.
+     */
+    export function showRewardedVideoAd(options: ShowRewardedOptions): Promise<any>;
 }

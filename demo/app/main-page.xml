@@ -8,7 +8,7 @@
   <StackLayout class="p-10">
     <Label text="{{ message }}" class="text-center m-b-10" textWrap="true"/>
 
-    <GridLayout columns="*, *" rows="auto, auto, auto, auto, auto, auto" horizontalAlignment="center">
+    <GridLayout columns="*, *" rows="auto, auto, auto, auto, auto, auto, auto" horizontalAlignment="center">
 
       <Button row="0" col="0" text="smart banner" tap="{{ doCreateSmartBanner }}"/>
       <Button row="0" col="1" text="regular banner" tap="{{ doCreateRegularBanner }}"/>
@@ -25,6 +25,9 @@
       <Button row="4" colSpan="2" text="create and show interstitial" tap="{{ doCreateInterstitial }}" class="btn-interstitial-deprecated"/>
 
       <Button row="5" colSpan="2" text="hide banner" tap="{{ doHideBanner }}" class="btn-hide"/>
+
+      <Button row="6" col="0" text="preload rewarded." tap="{{ doPreloadRewarded }}"/>
+      <Button row="6" col="1" text="show rewarded" tap="{{ doShowRewarded }}"/>
     </GridLayout>
 
   </StackLayout>

@@ -234,5 +234,124 @@ admob.hideBanner = function () {
     }
   });
 };
+var GADRewardBasedVideoAdDelegateImpl = (function (_super) {
+  __extends(GADRewardBasedVideoAdDelegateImpl, _super);
+
+  function GADRewardBasedVideoAdDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  GADRewardBasedVideoAdDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.initWithCallback = function (loaded, error, callbacks) {
+    this._callbacks = callbacks;
+    this._loaded = loaded;
+    this._error = error;
+    return this;
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidReceiveAd = function (ad) {
+    this._loaded();
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidFailToLoadWithError = function (ad, error) {
+    this._error(error);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidRewardUserWithReward = function (ad, reward) {
+    this._callbacks.onRewarded(reward);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidOpen = function (ad) {
+    this._callbacks.onRewardedVideoAdOpened(ad);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidStartPlaying = function (ad) {
+    this._callbacks.onRewardedVideoStarted(ad);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidCompletePlaying = function (ad) {
+    this._callbacks.onRewardedVideoCompleted(ad);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdDidClose = function (ad) {
+    if (admob.videoView) {
+      // admob.videoView.setRewardedVideoAdListener(null);
+      admob.videoView = null;
+    }
+    this._callbacks.onRewardedVideoAdClosed(ad);
+  };
+  GADRewardBasedVideoAdDelegateImpl.prototype.rewardBasedVideoAdWillLeaveApplication = function (ad) {
+    console.log("leftApplication")
+    this._callbacks.onRewardedVideoAdLeftApplication(ad);
+  };
+
+  GADRewardBasedVideoAdDelegateImpl.ObjCProtocols = [GADRewardBasedVideoAdDelegate];
+  return GADRewardBasedVideoAdDelegateImpl;
+})(NSObject);
+
+let rewardedVideoCallbacks = {
+  onRewarded: () => { console.warn("onRewarded callback not set")},
+  onRewardedVideoAdLeftApplication: () => {},
+  onRewardedVideoAdClosed: () => {},
+  onRewardedVideoAdOpened: () => {},
+  onRewardedVideoStarted: () => {},
+  onRewardedVideoCompleted: () => {},
+}
+var delegate = null;
+admob.preloadRewardedVideoAd = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      admob.videoView = GADRewardBasedVideoAd.sharedInstance();
+
+      // Rewarded ads must be loaded before they can be shown, so adding a listener
+      function loaded() {
+        resolve();
+      }
+      function error(errorMessage) {
+        reject(errorMessage);
+      }
+      delegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(loaded, error, rewardedVideoCallbacks);
+      admob.videoView.delegate = delegate;
+
+      var settings = admob.merge(arg, admob.defaults);
+      var adRequest = GADRequest.request();
+      if (settings.testing) {
+        settings.iosAdPlacementId = "ca-app-pub-3940256099942544/1712485313";
+      }
+
+      admob.videoView.loadRequestWithAdUnitID(adRequest, settings.iosAdPlacementId);
+    } catch (ex) {
+      console.log("Error in admob.preloadRewardedVideoAd: " + ex);
+      reject(ex);
+    }
+  });
+}
+admob.showRewardedVideoAd = function (arg) {
+  if(arg.onRewarded) {
+    rewardedVideoCallbacks.onRewarded = arg.onRewarded;
+  }
+  if(arg.onRewardedVideoAdLeftApplication) {
+    rewardedVideoCallbacks.onRewardedVideoAdLeftApplication = arg.onRewardedVideoAdLeftApplication;
+  }
+  if(arg.onRewardedVideoAdClosed) {
+    rewardedVideoCallbacks.onRewardedVideoAdClosed = arg.onRewardedVideoAdClosed;
+  }
+  if(arg.onRewardedVideoAdOpened) {
+    rewardedVideoCallbacks.onRewardedVideoAdOpened = arg.onRewardedVideoAdOpened;
+  }
+  if(arg.onRewardedVideoStarted) {
+    rewardedVideoCallbacks.onRewardedVideoStarted = arg.onRewardedVideoStarted;
+  }
+  if(arg.onRewardedVideoCompleted) {
+    rewardedVideoCallbacks.onRewardedVideoCompleted = arg.onRewardedVideoCompleted;
+  }
+  return new Promise(function (resolve, reject) {
+    try {
+      if (admob.videoView) {
+        admob.videoView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+        resolve();
+      } else {
+        reject("Please call 'preloadRewardedVideoAd' first.");
+      }
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
 
 module.exports = admob;

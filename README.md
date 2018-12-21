@@ -190,6 +190,54 @@ admob.showInterstitial().then(
 )
 ```
 
+
+### preloadRewardedVideoAd
+Use this for instance while loading your view, so it's ready for the moment you want to actually show it (by calling `showRewardedVideoAd`).
+
+```js
+admob.preloadRewardedVideoAd({
+    testing: true,
+    iosAdPlacementId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
+    androidAdPlacementId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+  }).then(
+      function() {
+        console.log("RewardedVideoAd preloaded - you can now call 'showRewardedVideoAd' whenever you're ready to do so");
+      },
+      function(error) {
+        console.log("admob preloadRewardedVideoAd error: " + error);
+      }
+)
+```
+
+### showRewardedVideoAd
+At any moment after `preloadRewardedVideoAd` successfully resolves, you can call `showRewardedVideoAd`.
+
+Note that when you want to use `showRewardedVideoAd` again, you also have to use `preloadRewardedVideoAd` again because those ads can't be reused.
+
+onRewarded is probably the only callback you need to worry about.
+
+```js
+admob.showRewardedVideoAd({
+  onRewarded: (reward) => {
+    console.log("onRewarded");
+    this.message = "watched rewarded video";
+  },
+  onRewardedVideoAdLeftApplication: () => console.log("onRewardedVideoAdLeftApplication"),
+  onRewardedVideoAdClosed: () => console.log("onRewardedVideoAdClosed"),
+  onRewardedVideoAdOpened: () => console.log("onRewardedVideoAdOpened"),
+  onRewardedVideoStarted: () => console.log("onRewardedVideoStarted"),
+  onRewardedVideoCompleted: () => console.log("onRewardedVideoCompleted"),
+}).then(
+      function() {
+        console.log("RewardedVideoAd showing");
+      },
+      function(error) {
+        console.log("admob showRewardedVideoAd error: " + error);
+      }
+)
+```
+
 ## Tutorials
 Need a little more help getting started? Check out these tutorials for using Admob in a NativeScript Android and iOS application.
 
