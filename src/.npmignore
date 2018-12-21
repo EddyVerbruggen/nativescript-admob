@@ -2,3 +2,4 @@
 .vscode
 references.d.ts
 platforms/android/AndroidManifest.xml
+platforms/ios/typings
