@@ -254,8 +254,11 @@ let rewardedVideoCallbacks = {
   },
   onRewardedVideoCompleted: () => {
   },
+  onRewardedVideoAdLoaded: () => {
+  },
+  onRewardedVideoAdFailedToLoad: () => {
+  },
 };
-
 admob.preloadRewardedVideoAd = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -264,6 +267,9 @@ admob.preloadRewardedVideoAd = function (arg) {
         settings.androidAdPlacementId = "ca-app-pub-3940256099942544/5224354917";
       }
       admob.videoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(admob._getActivity());
+
+      rewardedVideoCallbacks.onRewardedVideoAdLoaded = resolve;
+      rewardedVideoCallbacks.onRewardedVideoAdFailedToLoad = reject;
 
       // rewarded Ads must be loaded before they can be shown, so adding a listener
       var RewardedVideoAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
@@ -281,10 +287,10 @@ admob.preloadRewardedVideoAd = function (arg) {
           rewardedVideoCallbacks.onRewardedVideoAdClosed();
         },
         onRewardedVideoAdFailedToLoad(errorCode) {
-          reject(errorCode);
+          rewardedVideoCallbacks.onRewardedVideoAdFailedToLoad(errorCode);
         },
         onRewardedVideoAdLoaded() {
-          resolve();
+          rewardedVideoCallbacks.onRewardedVideoAdLoaded();
         },
         onRewardedVideoAdOpened() {
           rewardedVideoCallbacks.onRewardedVideoAdOpened();
