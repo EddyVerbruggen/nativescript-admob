@@ -26,7 +26,7 @@
 
       <Button row="5" colSpan="2" text="hide banner" tap="{{ doHideBanner }}" class="btn-hide"/>
 
-      <Button row="6" col="0" text="preload rewarded." tap="{{ doPreloadRewarded }}"/>
+      <Button row="6" col="0" text="preload rewarded" tap="{{ doPreloadRewarded }}"/>
       <Button row="6" col="1" text="show rewarded" tap="{{ doShowRewarded }}"/>
     </GridLayout>
 
