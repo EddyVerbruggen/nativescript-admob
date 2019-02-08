@@ -24,6 +24,6 @@
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "~0.7.4",
     "tns-platform-declarations": "~5.1.1",
-    "typescript": "~2.9.2"
+    "typescript": "~2.8.4"
   }
 }
