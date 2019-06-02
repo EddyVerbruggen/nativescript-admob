@@ -108,7 +108,7 @@ admob.createBanner = function (arg) {
 
       admob.adView.adUnitID = settings.iosBannerId;
 
-      var adRequest = GADRequest.request();
+      var adRequest = GADRequest.request;
 
       if (settings.testing) {
         var testDevices = ["Simulator"];
