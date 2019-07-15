@@ -1,6 +1,5 @@
 var admob = require("./admob-common");
 var application = require("tns-core-modules/application");
-var utils = require("tns-core-modules/utils/utils");
 var device = require("tns-core-modules/platform").device;
 var DeviceType = require("tns-core-modules/ui/enums").DeviceType;
 
@@ -66,9 +65,8 @@ admob._getBannerType = function (size) {
     // return kGADAdSizeSkyscraper;
     return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === admob.AD_SIZE.SMART_BANNER || size === admob.AD_SIZE.FLUID) {
-    var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = device.deviceType === DeviceType.Tablet;
-    if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
+    if (UIDevice.currentDevice.orientation === UIDeviceOrientation.Portrait || UIDevice.currentDevice.orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
@@ -89,7 +87,7 @@ admob.createBanner = function (arg) {
         admob.adView = null;
       }
 
-      admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      admob.defaults.view = UIApplication.sharedApplication.keyWindow.rootViewController.view;
       var settings = admob.merge(arg, admob.defaults);
       var view = settings.view;
       var bannerType = admob._getBannerType(settings.size);
@@ -122,8 +120,7 @@ admob.createBanner = function (arg) {
         adRequest.keywords = settings.keywords;
       }
 
-      admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
-      //var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
+      admob.adView.rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
 
       admob.adView.loadRequest(adRequest);
 
@@ -195,7 +192,7 @@ admob.showInterstitial = function () {
   return new Promise(function (resolve, reject) {
     try {
       if (admob.interstitialView) {
-        admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+        admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
         resolve();
       } else {
         reject("Please call 'preloadInterstitial' first.");
@@ -357,7 +354,7 @@ admob.showRewardedVideoAd = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (admob.videoView) {
-        admob.videoView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+        admob.videoView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
         resolve();
       } else {
         reject("Please call 'preloadRewardedVideoAd' first.");
