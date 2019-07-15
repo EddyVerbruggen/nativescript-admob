@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '+'
+    // note that with 18+ we currently experience a build issue, so let's stick to 17..
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '17+'
     implementation "com.google.android.gms:play-services-ads:$googlePlayServicesVersion"
 }

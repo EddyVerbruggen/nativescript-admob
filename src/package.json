@@ -1,6 +1,6 @@
 {
   "name": "nativescript-admob",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "Make money with your app by using Google's AdMob ads.",
   "main": "admob",
   "nativescript": {
@@ -10,14 +10,14 @@
     }
   },
   "scripts": {
-    "demo.ios": "cd ../demo && tns plugin remove nativescript-admob && tns plugin add ../src && tns run ios",
-    "demo.android": "cd ../demo && tns plugin remove nativescript-admob && tns plugin add ../src && tns run android",
+    "demo.ios": "cd ../demo && tns run ios",
+    "demo.android": "cd ../demo && tns run android",
     "demo.android.release": "echo '*** Replace MY_PASSWORD ***' && cd ../demo && tns build android --release --for-device --key-store-path ../../xservices.keystore --key-store-password MY_PASSWORD --key-store-alias xservices --key-store-alias-password MY_PASSWORD && adb install ../demo/platforms/android/app/build/outputs/apk/release/app-release.apk",
     "generate-typings.ios": "cd ../demo && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in ../demo/typings. Afterwards, remove that folder, and the (intermediate) metadata-* folders.'"
   },
   "devDependencies": {
-    "tns-core-modules": "~5.1.1",
-    "tns-platform-declarations": "~5.1.1"
+    "tns-core-modules": "~5.4.3",
+    "tns-platform-declarations": "~5.4.3"
   },
   "repository": {
     "type": "git",
