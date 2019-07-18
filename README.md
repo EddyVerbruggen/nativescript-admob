@@ -16,8 +16,20 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-admob
 ```
 
+### iOS
+> ⚠️ ⚠️ ⚠️ Important! Plugin version **4.0.0+** requires you to do this - or your app will crash on start-up! ⚠️
+
+Open your App_Resources/iOS/Info.plist file and add this (replace the value by the actual App ID of [your app](https://apps.admob.com/)!):
+
+```xml
+  <key>GADApplicationIdentifier</key>
+  <string>ca-app-pub-9517346003011652~2508636525</string>
+```
+
+Also, run `pod repo update` from a Terminal, otherwise the required Pod version may not be available on your system.
+
 ### Android
-> ⚠️ Important! Plugin version 3.0.0+ requires you to do this - or your app will crash on start-up! ⚠️
+> ⚠️ ⚠️ ⚠️ Important! Plugin version **3.0.0+** requires you to do this - or your app will crash on start-up! ⚠️
 
 Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data` line at [the right spot](https://github.com/EddyVerbruggen/nativescript-admob/blob/6bfa83c303023d0e8072148dcb45b8befb9cd0aa/demo/app/App_Resources/Android/src/main/AndroidManifest.xml#L28) (and replace the value by the actual App ID of [your app](https://apps.admob.com/)!):
 
@@ -29,9 +41,6 @@ Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data
   <activity></activity>
 </application>
 ```
-
-### iOS
-Run `pod repo update` from a Terminal, otherwise the required Pod version may not be available on your system.
 
 ## BANNER
 
