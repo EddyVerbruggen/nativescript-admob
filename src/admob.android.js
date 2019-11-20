@@ -168,15 +168,19 @@ admob.preloadInterstitial = function (arg) {
       admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(admob._getActivity());
       admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
+      // Fix for allowing multiple promises to be resolved.
+      this.resolve = resolve;
+      this.reject = reject;
+      var that = this;
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
           console.log("onAdLoaded");
-          resolve();
+          that.resolve();
         },
         onAdFailedToLoad: function (errorCode) {
           console.log("onAdFailedToLoad: " + errorCode);
-          reject(errorCode);
+          that.reject(errorCode);
         },
         onAdClosed: function () {
           if (admob.interstitialView) {
