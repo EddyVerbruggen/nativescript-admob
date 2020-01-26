@@ -138,12 +138,16 @@ admob.createBanner = function (arg) {
       // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(function () {
-        var topmost = frame.topmost();
-        if (topmost !== undefined) {
-          topmost.currentPage &&
-          topmost.currentPage.android &&
-          topmost.currentPage.android.getParent() &&
-          topmost.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        var adFrame = settings.view;
+        if(!adFrame) {
+          adFrame = frame.topmost();
+        }
+        
+        if (adFrame !== undefined) {
+          adFrame.currentPage &&
+          adFrame.currentPage.android &&
+          adFrame.currentPage.android.getParent() &&
+          adFrame.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
         } else {
           application.android &&
           application.android.foregroundActivity &&
