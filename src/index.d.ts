@@ -7,7 +7,9 @@ declare module "nativescript-admob" {
   export interface CreateBannerOptions {
     /**
      * The view you want to embed the ad into.
-     * iOS only, where the default is: UIApplication.sharedApplication().keyWindow.rootViewController.view
+     *
+     * On iOS the default is: UIApplication.sharedApplication().keyWindow.rootViewController.view
+     * On Android the default is: frame.topmost()
      */
     view?: any;
 

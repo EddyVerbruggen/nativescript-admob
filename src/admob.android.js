@@ -139,10 +139,10 @@ admob.createBanner = function (arg) {
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(function () {
         var adFrame = settings.view;
-        if(!adFrame) {
+        if (!adFrame) {
           adFrame = frame.topmost();
         }
-        
+
         if (adFrame !== undefined) {
           adFrame.currentPage &&
           adFrame.currentPage.android &&
