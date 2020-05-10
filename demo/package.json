@@ -6,24 +6,24 @@
   "nativescript": {
     "id": "org.nativescript.admobdemo",
     "tns-android": {
-      "version": "6.3.0"
+      "version": "6.5.0"
     },
     "tns-ios": {
-      "version": "6.3.0"
+      "version": "6.5.0"
     }
   },
   "dependencies": {
     "nativescript-admob": "file:../src",
-    "nativescript-theme-core": "~1.0.4",
-    "tns-core-modules": "~6.3.2"
+    "nativescript-theme-core": "~1.0.6",
+    "tns-core-modules": "~6.5.1"
   },
   "devDependencies": {
     "babel-traverse": "6.26.0",
     "babel-types": "6.26.0",
     "babylon": "6.18.0",
     "lazy": "1.0.11",
-    "nativescript-dev-webpack": "1.0.1",
-    "tns-platform-declarations": "~6.3.2",
-    "typescript": "3.4.5"
+    "nativescript-dev-webpack": "1.2.1",
+    "tns-platform-declarations": "~6.5.1",
+    "typescript": "~3.5.3"
   }
 }

@@ -212,6 +212,21 @@ declare var GADAdNetworkExtras: {
   prototype: GADAdNetworkExtras;
 };
 
+declare class GADAdNetworkResponseInfo extends NSObject {
+
+  static alloc(): GADAdNetworkResponseInfo; // inherited from NSObject
+
+  static new(): GADAdNetworkResponseInfo; // inherited from NSObject
+
+  readonly adNetworkClassName: string;
+
+  readonly credentials: NSDictionary<string, any>;
+
+  readonly error: NSError;
+
+  readonly latency: number;
+}
+
 declare class GADAdReward extends NSObject {
 
   static alloc(): GADAdReward; // inherited from NSObject
@@ -256,6 +271,32 @@ declare function GADAdSizeFullWidthPortraitWithHeight(height: number): GADAdSize
 
 declare function GADAdSizeIsFluid(size: GADAdSize): boolean;
 
+declare class GADAdValue extends NSObject implements NSCopying {
+
+  static alloc(): GADAdValue; // inherited from NSObject
+
+  static new(): GADAdValue; // inherited from NSObject
+
+  readonly currencyCode: string;
+
+  readonly precision: GADAdValuePrecision;
+
+  readonly value: NSDecimalNumber;
+
+  copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
+}
+
+declare const enum GADAdValuePrecision {
+
+  Unknown = 0,
+
+  Estimated = 1,
+
+  PublisherProvided = 2,
+
+  Precise = 3
+}
+
 declare const enum GADAdapterInitializationState {
 
   NotReady = 0,
@@ -295,6 +336,10 @@ declare class GADAppOpenAd extends NSObject {
   static loadWithAdUnitIDRequestOrientationCompletionHandler(adUnitID: string, request: GADRequest, orientation: UIInterfaceOrientation, completionHandler: (p1: GADAppOpenAd, p2: NSError) => void): void;
 
   static new(): GADAppOpenAd; // inherited from NSObject
+
+  paidEventHandler: (p1: GADAdValue) => void;
+
+  readonly responseInfo: GADResponseInfo;
 }
 
 declare class GADAppOpenAdView extends UIView {
@@ -383,6 +428,10 @@ declare class GADBannerView extends UIView {
 
   readonly mediatedAdView: UIView;
 
+  paidEventHandler: (p1: GADAdValue) => void;
+
+  readonly responseInfo: GADResponseInfo;
+
   rootViewController: UIViewController;
 
   constructor(o: { adSize: GADAdSize; });
@@ -416,11 +465,17 @@ declare var GADBannerViewDelegate: {
   prototype: GADBannerViewDelegate;
 };
 
-declare function GADClosestValidSizeForAdSizes(original: GADAdSize, possibleAdSizes: NSArray<NSValue>): GADAdSize;
+declare function GADClosestValidSizeForAdSizes(original: GADAdSize, possibleAdSizes: NSArray<NSValue> | NSValue[]): GADAdSize;
+
+declare function GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width: number): GADAdSize;
+
+declare var GADCustomEventAdNetworkClassName: string;
 
 interface GADCustomEventBanner extends NSObjectProtocol {
 
   delegate: GADCustomEventBannerDelegate;
+
+  init?(): GADCustomEventBanner;
 
   requestBannerAdParameterLabelRequest(adSize: GADAdSize, serverParameter: string, serverLabel: string, request: GADCustomEventRequest): void;
 }
@@ -509,6 +564,8 @@ interface GADCustomEventInterstitial extends NSObjectProtocol {
 
   delegate: GADCustomEventInterstitialDelegate;
 
+  init?(): GADCustomEventInterstitial;
+
   presentFromRootViewController(rootViewController: UIViewController): void;
 
   requestInterstitialAdWithParameterLabelRequest(serverParameter: string, serverLabel: string, request: GADCustomEventRequest): void;
@@ -551,6 +608,8 @@ interface GADCustomEventNativeAd extends NSObjectProtocol {
 
   handlesUserImpressions(): boolean;
 
+  init?(): GADCustomEventNativeAd;
+
   requestNativeAdWithParameterRequestAdTypesOptionsRootViewController(serverParameter: string, request: GADCustomEventRequest, adTypes: NSArray<any> | any[], options: NSArray<any> | any[], rootViewController: UIViewController): void;
 }
 
@@ -562,8 +621,6 @@ declare var GADCustomEventNativeAd: {
 interface GADCustomEventNativeAdDelegate extends NSObjectProtocol {
 
   customEventNativeAdDidFailToLoadWithError(customEventNativeAd: GADCustomEventNativeAd, error: NSError): void;
-
-  customEventNativeAdDidReceiveMediatedNativeAd(customEventNativeAd: GADCustomEventNativeAd, mediatedNativeAd: GADMediatedNativeAd): void;
 
   customEventNativeAdDidReceiveMediatedUnifiedNativeAd(customEventNativeAd: GADCustomEventNativeAd, mediatedUnifiedNativeAd: GADMediatedUnifiedNativeAd): void;
 }
@@ -793,8 +850,6 @@ declare const enum GADErrorCode {
 
   kGADErrorMediationAdapterError = 8,
 
-  kGADErrorMediationNoFill = 9,
-
   kGADErrorMediationInvalidAdSize = 10,
 
   kGADErrorInternalError = 11,
@@ -803,8 +858,16 @@ declare const enum GADErrorCode {
 
   kGADErrorReceivedInvalidResponse = 13,
 
-  kGADErrorRewardedAdAlreadyUsed = 14
+  kGADErrorRewardedAdAlreadyUsed = 14,
+
+  kGADErrorMediationNoFill = 9,
+
+  kGADErrorAdAlreadyUsed = 19,
+
+  kGADErrorApplicationIdentifierMissing = 20
 }
+
+declare var GADErrorUserInfoKeyResponseInfo: string;
 
 declare class GADExtras extends NSObject implements GADAdNetworkExtras {
 
@@ -858,6 +921,8 @@ declare const enum GADGender {
   kGADGenderFemale = 2
 }
 
+declare var GADGoogleAdNetworkClassName: string;
+
 declare class GADInAppPurchase extends NSObject {
 
   static alloc(): GADInAppPurchase; // inherited from NSObject
@@ -903,6 +968,44 @@ declare class GADInitializationStatus extends NSObject implements NSCopying {
   copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 }
 
+declare class GADInstreamAd extends NSObject {
+
+  static alloc(): GADInstreamAd; // inherited from NSObject
+
+  static loadAdWithAdTagCompletionHandler(adTag: string, completionHandler: (p1: GADInstreamAd, p2: NSError) => void): void;
+
+  static loadAdWithAdUnitIDRequestMediaAspectRatioCompletionHandler(adUnitID: string, request: GADRequest, mediaAspectRatio: GADMediaAspectRatio, completionHandler: (p1: GADInstreamAd, p2: NSError) => void): void;
+
+  static new(): GADInstreamAd; // inherited from NSObject
+
+  readonly mediaContent: GADMediaContent;
+
+  paidEventHandler: (p1: GADAdValue) => void;
+
+  readonly responseInfo: GADResponseInfo;
+}
+
+declare class GADInstreamAdView extends UIView {
+
+  static alloc(): GADInstreamAdView; // inherited from NSObject
+
+  static appearance(): GADInstreamAdView; // inherited from UIAppearance
+
+  static appearanceForTraitCollection(trait: UITraitCollection): GADInstreamAdView; // inherited from UIAppearance
+
+  static appearanceForTraitCollectionWhenContainedIn(trait: UITraitCollection, ContainerClass: typeof NSObject): GADInstreamAdView; // inherited from UIAppearance
+
+  static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADInstreamAdView; // inherited from UIAppearance
+
+  static appearanceWhenContainedIn(ContainerClass: typeof NSObject): GADInstreamAdView; // inherited from UIAppearance
+
+  static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADInstreamAdView; // inherited from UIAppearance
+
+  static new(): GADInstreamAdView; // inherited from NSObject
+
+  ad: GADInstreamAd;
+}
+
 declare class GADInterstitial extends NSObject {
 
   static alloc(): GADInterstitial; // inherited from NSObject
@@ -921,7 +1024,13 @@ declare class GADInterstitial extends NSObject {
 
   readonly isReady: boolean;
 
+  paidEventHandler: (p1: GADAdValue) => void;
+
+  readonly responseInfo: GADResponseInfo;
+
   constructor(o: { adUnitID: string; });
+
+  canPresentFromRootViewControllerError(rootViewController: UIViewController): boolean;
 
   initWithAdUnitID(adUnitID: string): this;
 
@@ -953,6 +1062,8 @@ declare var GADInterstitialDelegate: {
 
   prototype: GADInterstitialDelegate;
 };
+
+declare function GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width: number): GADAdSize;
 
 interface GADMAdNetworkAdapter extends NSObjectProtocol {
 
@@ -1007,8 +1118,6 @@ interface GADMAdNetworkConnector extends GADMediationAdRequest {
   adapterDidReceiveInterstitial(adapter: GADMAdNetworkAdapter): void;
 
   adapterDidReceiveInterstitial(adapter: GADMAdNetworkAdapter, interstitial: NSObject): void;
-
-  adapterDidReceiveMediatedNativeAd(adapter: GADMAdNetworkAdapter, mediatedNativeAd: GADMediatedNativeAd): void;
 
   adapterDidReceiveMediatedUnifiedNativeAd(adapter: GADMAdNetworkAdapter, mediatedUnifiedNativeAd: GADMediatedUnifiedNativeAd): void;
 
@@ -1138,6 +1247,10 @@ declare class GADMediaContent extends NSObject {
 
   readonly aspectRatio: number;
 
+  readonly currentTime: number;
+
+  readonly duration: number;
+
   readonly hasVideoContent: boolean;
 
   mainImage: UIImage;
@@ -1166,61 +1279,6 @@ declare class GADMediaView extends UIView {
   mediaContent: GADMediaContent;
 }
 
-interface GADMediatedNativeAd extends NSObjectProtocol {
-
-  extraAssets(): NSDictionary<any, any>;
-
-  mediatedNativeAdDelegate(): GADMediatedNativeAdDelegate;
-}
-
-declare var GADMediatedNativeAd: {
-
-  prototype: GADMediatedNativeAd;
-};
-
-interface GADMediatedNativeAdDelegate extends NSObjectProtocol {
-
-  mediatedNativeAdDidRecordClickOnAssetWithNameViewViewController?(mediatedNativeAd: GADMediatedNativeAd, assetName: string, view: UIView, viewController: UIViewController): void;
-
-  mediatedNativeAdDidRecordImpression?(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  mediatedNativeAdDidRenderInViewClickableAssetViewsNonclickableAssetViewsViewController?(mediatedNativeAd: GADMediatedNativeAd, view: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>, viewController: UIViewController): void;
-
-  mediatedNativeAdDidRenderInViewViewController?(mediatedNativeAd: GADMediatedNativeAd, view: UIView, viewController: UIViewController): void;
-
-  mediatedNativeAdDidUntrackView?(mediatedNativeAd: GADMediatedNativeAd, view: UIView): void;
-}
-
-declare var GADMediatedNativeAdDelegate: {
-
-  prototype: GADMediatedNativeAdDelegate;
-};
-
-declare class GADMediatedNativeAdNotificationSource extends NSObject {
-
-  static alloc(): GADMediatedNativeAdNotificationSource; // inherited from NSObject
-
-  static mediatedNativeAdDidDismissScreen(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdDidEndVideoPlayback(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdDidPauseVideo(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdDidPlayVideo(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdDidRecordClick(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdDidRecordImpression(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdWillDismissScreen(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdWillLeaveApplication(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static mediatedNativeAdWillPresentScreen(mediatedNativeAd: GADMediatedNativeAd): void;
-
-  static new(): GADMediatedNativeAdNotificationSource; // inherited from NSObject
-}
-
 interface GADMediatedUnifiedNativeAd extends NSObjectProtocol {
 
   adChoicesView?: UIView;
@@ -1230,6 +1288,10 @@ interface GADMediatedUnifiedNativeAd extends NSObjectProtocol {
   body: string;
 
   callToAction: string;
+
+  currentTime?: number;
+
+  duration?: number;
 
   extraAssets: NSDictionary<string, any>;
 
@@ -1387,6 +1449,8 @@ declare var GADMediationAdRequest: {
 
 interface GADMediationAdapter extends NSObjectProtocol {
 
+  init?(): GADMediationAdapter;
+
   loadBannerForAdConfigurationCompletionHandler?(adConfiguration: GADMediationBannerAdConfiguration, completionHandler: (p1: GADMediationBannerAd, p2: NSError) => GADMediationBannerAdEventDelegate): void;
 
   loadInterstitialForAdConfigurationCompletionHandler?(adConfiguration: GADMediationInterstitialAdConfiguration, completionHandler: (p1: GADMediationInterstitialAd, p2: NSError) => GADMediationInterstitialAdEventDelegate): void;
@@ -1404,11 +1468,7 @@ declare var GADMediationAdapter: {
 
   networkExtrasClass(): typeof NSObject;
 
-  setUp?(): void;
-
   setUpWithConfigurationCompletionHandler?(configuration: GADMediationServerConfiguration, completionHandler: (p1: NSError) => void): void;
-
-  updateConfiguration?(configuration: GADMediationServerConfiguration): void;
 
   version(): GADVersionNumber;
 };
@@ -1586,6 +1646,14 @@ declare class GADMobileAds extends NSObject {
   readonly initializationStatus: GADInitializationStatus;
 
   readonly requestConfiguration: GADRequestConfiguration;
+
+  disableAutomatedInAppPurchaseReporting(): void;
+
+  disableMediationInitialization(): void;
+
+  disableSDKCrashReporting(): void;
+
+  enableAutomatedInAppPurchaseReporting(): void;
 
   isSDKVersionAtLeastMajorMinorPatch(major: number, minor: number, patch: number): boolean;
 
@@ -1823,6 +1891,21 @@ declare class GADNativeMuteThisAdLoaderOptions extends GADAdLoaderOptions {
   customMuteThisAdRequested: boolean;
 }
 
+declare function GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(width: number): GADAdSize;
+
+declare const enum GADPresentationErrorCode {
+
+  CodeAdNotReady = 15,
+
+  CodeAdTooLarge = 16,
+
+  CodeInternal = 17,
+
+  CodeAdAlreadyUsed = 18,
+
+  NotMainThread = 21
+}
+
 interface GADRTBAdapter extends GADMediationAdapter {
 
   collectSignalsForRequestParametersCompletionHandler(params: GADRTBRequestParameters, completionHandler: (p1: string, p2: NSError) => void): void;
@@ -1836,11 +1919,7 @@ declare var GADRTBAdapter: {
 
   networkExtrasClass(): typeof NSObject;
 
-  setUp?(): void;
-
   setUpWithConfigurationCompletionHandler?(configuration: GADMediationServerConfiguration, completionHandler: (p1: NSError) => void): void;
-
-  updateConfiguration?(configuration: GADMediationServerConfiguration): void;
 
   version(): GADVersionNumber;
 };
@@ -1887,7 +1966,9 @@ declare class GADRequest extends NSObject implements NSCopying {
 
   requestAgent: string;
 
-  testDevices: NSArray<any>;
+  scene: UIWindowScene;
+
+  testDevices: NSArray<string>;
 
   adNetworkExtrasFor(aClass: typeof NSObject): GADAdNetworkExtras;
 
@@ -1914,6 +1995,8 @@ declare class GADRequestConfiguration extends NSObject {
 
   maxAdContentRating: string;
 
+  testDeviceIdentifiers: NSArray<string>;
+
   tagForChildDirectedTreatment(childDirectedTreatment: boolean): void;
 
   tagForUnderAgeOfConsent(underAgeOfConsent: boolean): void;
@@ -1930,6 +2013,19 @@ declare class GADRequestError extends NSError {
   static fileProviderErrorForNonExistentItemWithIdentifier(itemIdentifier: string): GADRequestError; // inherited from NSError
 
   static new(): GADRequestError; // inherited from NSObject
+}
+
+declare class GADResponseInfo extends NSObject {
+
+  static alloc(): GADResponseInfo; // inherited from NSObject
+
+  static new(): GADResponseInfo; // inherited from NSObject
+
+  readonly adNetworkClassName: string;
+
+  readonly adNetworkInfoArray: NSArray<GADAdNetworkResponseInfo>;
+
+  readonly responseIdentifier: string;
 }
 
 declare class GADRewardBasedVideoAd extends NSObject {
@@ -1997,13 +2093,19 @@ declare class GADRewardedAd extends NSObject {
 
   readonly adUnitID: string;
 
+  paidEventHandler: (p1: GADAdValue) => void;
+
   readonly ready: boolean;
+
+  readonly responseInfo: GADResponseInfo;
 
   readonly reward: GADAdReward;
 
   serverSideVerificationOptions: GADServerSideVerificationOptions;
 
   constructor(o: { adUnitID: string; });
+
+  canPresentFromRootViewControllerError(rootViewController: UIViewController): boolean;
 
   initWithAdUnitID(adUnitID: string): this;
 
@@ -2057,67 +2159,6 @@ declare class GADSearchBannerView extends GADBannerView {
   static new(): GADSearchBannerView; // inherited from NSObject
 }
 
-declare const enum GADSearchBorderType {
-
-  kGADSearchBorderTypeNone = 0,
-
-  kGADSearchBorderTypeDashed = 1,
-
-  kGADSearchBorderTypeDotted = 2,
-
-  kGADSearchBorderTypeSolid = 3
-}
-
-declare const enum GADSearchCallButtonColor {
-
-  kGADSearchCallButtonLight = 0,
-
-  kGADSearchCallButtonMedium = 1,
-
-  kGADSearchCallButtonDark = 2
-}
-
-declare class GADSearchRequest extends GADRequest {
-
-  static alloc(): GADSearchRequest; // inherited from NSObject
-
-  static new(): GADSearchRequest; // inherited from NSObject
-
-  static request(): GADSearchRequest; // inherited from GADRequest
-
-  anchorTextColor: UIColor;
-
-  readonly backgroundColor: UIColor;
-
-  borderColor: UIColor;
-
-  borderThickness: number;
-
-  borderType: GADSearchBorderType;
-
-  callButtonColor: GADSearchCallButtonColor;
-
-  customChannels: string;
-
-  descriptionTextColor: UIColor;
-
-  fontFamily: string;
-
-  readonly gradientFrom: UIColor;
-
-  readonly gradientTo: UIColor;
-
-  headerColor: UIColor;
-
-  headerTextSize: number;
-
-  query: string;
-
-  setBackgroundGradientFromToColor(from: UIColor, toColor: UIColor): void;
-
-  setBackgroundSolid(color: UIColor): void;
-}
-
 declare class GADServerSideVerificationOptions extends NSObject implements NSCopying {
 
   static alloc(): GADServerSideVerificationOptions; // inherited from NSObject
@@ -2163,7 +2204,11 @@ declare class GADUnifiedNativeAd extends NSObject {
 
   readonly muteThisAdReasons: NSArray<GADMuteThisAdReason>;
 
+  paidEventHandler: (p1: GADAdValue) => void;
+
   readonly price: string;
+
+  readonly responseInfo: GADResponseInfo;
 
   rootViewController: UIViewController;
 
@@ -2374,10 +2419,6 @@ declare function NSValueFromGADAdSize(size: GADAdSize): NSValue;
 declare var kDFPSimulatorID: any;
 
 declare var kGADAdLoaderAdTypeDFPBanner: string;
-
-declare var kGADAdLoaderAdTypeNativeAppInstall: string;
-
-declare var kGADAdLoaderAdTypeNativeContent: string;
 
 declare var kGADAdLoaderAdTypeNativeCustomTemplate: string;
 

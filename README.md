@@ -17,7 +17,7 @@ tns plugin add nativescript-admob
 ```
 
 ### iOS
-> ⚠️ ⚠️ ⚠️ Important! Plugin version **4.0.0+** requires you to do this - or your app will crash on start-up! ⚠️
+> ⚠️ ⚠️ ⚠️ Important! Since version **4.0.0** it's required you to do this - or your app will crash on start-up! ⚠️
 
 Open your App_Resources/iOS/Info.plist file and add this (replace the value by the actual App ID of [your app](https://apps.admob.com/)!):
 
