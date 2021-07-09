@@ -1,6 +1,6 @@
 {
   "name": "nativescript-admob",
-  "version": "4.1.0",
+  "version": "5.1.0",
   "description": "Make money with your app by using Google's AdMob ads.",
   "main": "admob",
   "nativescript": {
@@ -16,8 +16,8 @@
     "generate-typings.ios": "cd ../demo && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in ../demo/typings. Afterwards, remove that folder, and the (intermediate) metadata-* folders.'"
   },
   "devDependencies": {
-    "tns-core-modules": "~6.5.1",
-    "tns-platform-declarations": "~6.5.1"
+    "@nativescript/core": "~8.0.0",
+    "@nativescript/types": "~8.0.0"
   },
   "repository": {
     "type": "git",
